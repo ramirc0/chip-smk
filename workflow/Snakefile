@@ -7,6 +7,20 @@ include: "rules/qc.smk"
 include: "rules/report.smk"
 
 
+# Seconds-long jobs, which would spend longer queued than running.
+localrules:
+    choose_ctl,
+    pool_ta,
+    fraglen_mean,
+    plot_xcor,
+    plot_idr,
+    blacklist_filter,
+    overlap,
+    reproducibility,
+    peak_qc,
+    qc_summary,
+
+
 def deliverables():
     """Return the files `rule all` requests beyond the QC table.
 
