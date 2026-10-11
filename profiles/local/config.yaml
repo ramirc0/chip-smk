@@ -32,15 +32,13 @@ set-threads:              # single-threaded rules get the default, 1
   count_signal: 4
   jsd: 4
 
-set-resources:              # starting values from atac-smk's benchmarks
+set-resources:              # from peak RSS of the ENCODE validation run
   bowtie2_build: {mem_mb: 16000}
   align: {mem_mb: 64000}
-  xcor_tagalign: {mem_mb: 48000}
-  filter: {mem_mb: 64000}
-  tagalign: {mem_mb: 32000}
+  xcor_tagalign: {mem_mb: 16000}
+  filter: {mem_mb: 48000}
+  tagalign: {mem_mb: 24000}
   subsample_ta: {mem_mb: 24000}
-  pseudoreps: {mem_mb: 16000}
   pbc_qc: {mem_mb: 24000}
-  spp: {mem_mb: 32000}
-  xcor: {mem_mb: 16000}
-  signal: {mem_mb: 24000}
+  spp: {mem_mb: 16000}
+  signal: {mem_mb: 16000}

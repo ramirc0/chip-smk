@@ -34,7 +34,7 @@ set-threads:              # single-threaded rules get the default, 1
   count_signal: 4
   jsd: 4
 
-set-resources:              # starting values from atac-smk's benchmarks
+set-resources:              # from peak RSS and runtime of the ENCODE validation run
   bowtie2_build:
     mem_mb: 16000 * attempt
   bwa_index:
@@ -46,27 +46,23 @@ set-resources:              # starting values from atac-smk's benchmarks
     slurm_partition: 12hours
     runtime: 720m
   xcor_tagalign:
-    mem_mb: 48000 * attempt
+    mem_mb: 16000 * attempt
     slurm_partition: 12hours
     runtime: 720m
   filter:
-    mem_mb: 64000 * attempt
+    mem_mb: 48000 * attempt
   tagalign:
-    mem_mb: 32000 * attempt
+    mem_mb: 24000 * attempt
   subsample_ta:
     mem_mb: 24000 * attempt
-  pseudoreps:
-    mem_mb: 16000 * attempt
   pbc_qc:
     mem_mb: 24000 * attempt
   spp:
-    mem_mb: 32000 * attempt
+    mem_mb: 16000 * attempt
     slurm_partition: 12hours
     runtime: 720m
-  xcor:
-    mem_mb: 16000 * attempt
   signal:
-    mem_mb: 24000 * attempt
+    mem_mb: 16000 * attempt
 
 rerun-incomplete: true
 keep-going: true
