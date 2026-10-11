@@ -7,8 +7,10 @@ config/config.yaml
 .snakemake
 scratch
 .conda
-/resources
+resources
 benchmarks
+.tmp
+results*/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

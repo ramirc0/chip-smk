@@ -1,7 +1,7 @@
 # Launcher: Snakemake with the pixi software-deployment and SLURM executor
 # plugins. Rule envs live in their own workspace, workflow/envs/pixi.toml.
 [workspace]
-name = "snakemake-template"
+name = "chip-smk"
 channels = ["conda-forge"]
 platforms = ["linux-64"]
 
@@ -16,10 +16,10 @@ snakemake-executor-plugin-slurm = "==2.8.0"
 snakemake-executor-plugin-slurm-jobstep = "==0.6.1"
 
 [tasks]
-test = "snakemake --snakefile workflow/Snakefile --directory .tests/integration --profile profiles/local --cores 2 --forceall"
+test = "pixi run --manifest-path workflow/envs/pixi.toml --environment test pytest -n auto .tests/integration"
 
 [feature.lint.dependencies]
-ruff = ">=0.16.9,<0.17"
+ruff = ">=0.17,<0.18"
 numpydoc = ">=1.11.0,<2"
 
 [feature.lint.tasks]

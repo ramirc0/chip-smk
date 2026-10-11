@@ -1,16 +1,73 @@
 [workspace]
-name = "snakemake-template-envs"
-channels = ["conda-forge"]
+name = "chip-smk-envs"
+channels = ["conda-forge", "bioconda"]
 platforms = ["linux-64"]
 
 [dependencies]
-python = "3.12.*"
-polars = ">=1.43"
+python = "3.13.*"
+bedtools = ">=2.31.1"
+bowtie2 = ">=2.5.5"
+bwa = ">=0.7.19"
+cutadapt = ">=5.2"
+deeptools = ">=4.0"
+fastp = ">=1.4.0"
+macs3 = ">=3.0.5"
+openssl = ">=3.6"
+picard = ">=3.5.0"
+pigz = ">=2.8"
+rapidgzip = ">=0.16"
+sambamba = ">=1.0.1"
+samtools = ">=1.24"
+ucsc-bedclip = ">=482"
+ucsc-bedgraphtobigwig = ">=482"
 matplotlib = ">=3.11"
+numpy = ">=2.5"
+orjson = ">=3.12"
+polars = ">=2.0"
+python-zlib-ng = ">=1.0"
 
 [pypi-dependencies]
-poikilos = { git = "https://github.com/ramirc0/poikilos", extras = ["labels"] }
+poikilos = { git = "https://github.com/ramirc0/poikilos" }
 
-# Rule jobs only save figures. Without this, a job that inherits DISPLAY picks a GUI backend.
 [activation.env]
+# Rule jobs only save figures. Without this, a job that inherits DISPLAY picks a GUI backend.
 MPLBACKEND = "Agg"
+# The image fixed its locale. Pinning one keeps sort order independent of the host.
+LC_ALL = "C"
+
+# idr 2.0.4.2, the last release, needs python <3.10, numpy <1.20 and scipy <1.10.
+# rapidgzip has no python 3.9 build; peak files are small enough for pigz.
+[feature.idr.dependencies]
+python = "3.9.*"
+idr = ">=2.0.4.2"
+pigz = ">=2.8"
+ucsc-bedclip = ">=482"
+
+[feature.idr.activation.env]
+LC_ALL = "C"
+
+# run_spp.R for SPP peaks and cross-correlation.
+[feature.spp.dependencies]
+phantompeakqualtools = ">=1.2.2"
+r-spp = ">=1.16"
+python = "3.13.*"
+openssl = ">=3.6"
+pigz = ">=2.8"
+rapidgzip = ">=0.16"
+ucsc-bedclip = ">=482"
+
+[feature.spp.activation.env]
+LC_ALL = "C"
+# A user library must not shadow the env's R packages.
+R_LIBS_USER = "-"
+
+[feature.test.dependencies]
+filelock = "*"
+pytest = "*"
+pytest-xdist = "*"
+seqkit = "*"
+
+[environments]
+idr = { features = ["idr"], no-default-feature = true }
+spp = { features = ["spp"], no-default-feature = true }
+test = { features = ["test"] }
