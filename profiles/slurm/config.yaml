@@ -11,6 +11,8 @@ max-jobs-per-second: 5
 slurm-efficiency-report: true
 slurm-efficiency-report-path: logs/efficiency
 slurm-efficiency-threshold: 0.8
+# The plugin's 40 s default makes every seconds-long job cost at least 40 s.
+slurm-init-seconds-before-status-checks: 10
 
 default-resources:
   slurm_partition: 4hours
