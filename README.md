@@ -243,6 +243,11 @@ Outputs match ENCODE's task scripts on the fixture, except where listed here.
 - A paired-end control subsample of odd size is rounded down to whole pairs.
   ENCODE raises.
 - phantompeakqualtools 1.2.2 and spp 1.16 replace 1.2.1 and 1.15.
+- bowtie2 2.5.5 replaces 2.3.4.3. The alignments match on the fixture.
+- ENCODE's `qc.json` writes the two-read count to `positions_with_one_read`, as
+  its parser sets that key twice. `qc.tsv` keeps both counts under their own names.
+- `pct_duplicate_reads` is unrounded. ENCODE rounds the duplicate fraction to two
+  decimals, then multiplies by 100.
 - Not ported: bigBed, starch and hammock files; `qc.html` and `qc.json`; BAM,
   tagAlign and peak entry points; `filter_chrs`, redaction, bowtie2 `--local`,
   custom aligners, a fixed fragment length or seed, `no_dup_removal`, a peak
