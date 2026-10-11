@@ -1,5 +1,7 @@
 """Compare each workflow step with ENCODE's own task script on the same inputs."""
 
+import gzip
+import random
 import subprocess
 
 import polars as pl
@@ -15,6 +17,7 @@ from conftest import (
     encode,
     first_difference,
     lines,
+    run_rule,
 )
 
 # Library, layout and ENCODE's paired-end flag of the two fixture experiments.
@@ -560,12 +563,13 @@ def pair_files(run, exp, pair):
     )
 
 
-@pytest.mark.parametrize("method", ["overlap", "idr"])
-@pytest.mark.parametrize(("exp", "pair"), PAIRS)
+@pytest.mark.parametrize(
+    ("exp", "pair", "method"),
+    [(exp, pair, "overlap") for exp, pair in PAIRS]
+    + [(exp, pair, "idr") for exp, pair in PAIRS if exp in ("YCR", "BGT")],
+)
 def test_pair_peaks_and_frip_match_encode(run, exp, pair, method):
     """Check overlap and IDR peaks, filtered, and their FRiP against ENCODE's."""
-    if method == "idr" and exp not in ("YCR", "BGT"):
-        pytest.skip("IDR runs on tf experiments only")
     p1, p2, oracle_peaks, ta, length, oracle = pair_files(run, exp, pair)
     ptype = p1.name.split(".")[-2]
     flags = (
@@ -681,3 +685,189 @@ def test_count_signal_tracks_match_encode(run, exp):
     for strand in ("positive", "negative"):
         theirs = bigwig_stats(next(out.glob(f"*.{strand}.bigwig")))
         assert bigwig_stats(run / f"{exp}/signal/{exp}.rep1.{strand}.bigWig") == theirs
+
+
+def synthetic_reads(path, n, rng, lengths):
+    """Write reads drawn from the fixture genome, with varied lengths.
+
+    Parameters
+    ----------
+    path : pathlib.Path
+        Gzipped FASTQ to write.
+    n : int
+        Reads to write. Read ``i`` is named ``r<i>`` in every file, so files
+        written with the same seed pair up.
+    rng : random.Random
+        Source of positions and lengths.
+    lengths : tuple of int
+        Smallest and largest read length.
+
+    Returns
+    -------
+    pathlib.Path
+        ``path``.
+    """
+    genome = "".join(x for x in lines(GENOME)[1:3000] if not x.startswith(">"))
+    with gzip.open(path, "wt") as f:
+        for i in range(n):
+            size = rng.randint(*lengths)
+            start = rng.randrange(len(genome) - size)
+            # Varied Phred+33 qualities, so Trimmomatic can detect the encoding.
+            quality = "".join(rng.choice("#+5?I") for _ in range(size))
+            f.write(f"@r{i}\n{genome[start : start + size]}\n+\n{quality}\n")
+    return path
+
+
+def reads(bam, mate):
+    """Return a BAM's reads as (name, sequence), in their sequenced orientation.
+
+    Parameters
+    ----------
+    bam : pathlib.Path
+        BAM file.
+    mate : {0, 1, 2}
+        Mate to read; 0 for single-end reads.
+
+    Returns
+    -------
+    set of tuple of str
+        One pair per read.
+    """
+    outputs = {f"-{m}": "/dev/stdout" if m == mate else "/dev/null" for m in (0, 1, 2)}
+    # samtools fastq pairs mates only when they are adjacent.
+    collated = subprocess.run(
+        ["samtools", "sort", "-n", "-u", str(bam)], capture_output=True, check=True
+    ).stdout
+    fastq = (
+        subprocess.run(
+            ["samtools", "fastq", "-n", "-s", "/dev/null"]
+            + [x for pair in outputs.items() for x in pair]
+            + ["-"],
+            input=collated,
+            capture_output=True,
+            check=True,
+        )
+        .stdout.decode()
+        .splitlines()
+    )
+    return {(fastq[i][1:], fastq[i + 1]) for i in range(0, len(fastq), 4)}
+
+
+def fastq_reads(path):
+    """Return a FASTQ's reads as (name, sequence).
+
+    Parameters
+    ----------
+    path : pathlib.Path
+        FASTQ, gzipped or not.
+
+    Returns
+    -------
+    set of tuple of str
+        One pair per read, the name up to the first space.
+    """
+    fastq = lines(path)
+    return {(fastq[i][1:].split()[0], fastq[i + 1]) for i in range(0, len(fastq), 4)}
+
+
+def run_align(tmp_path, layout, fastqs, crop, config):
+    """Align reads alone, as the workflow's align rule, with a one-library sheet.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        Scratch directory.
+    layout : {"se", "pe"}
+        Single or paired end.
+    fastqs : list of pathlib.Path
+        R1, then R2 for paired end, in ``tmp_path``.
+    crop : int
+        Crop length, 0 for none.
+    config : str
+        YAML merged over the fixture config, after the sheet.
+
+    Returns
+    -------
+    pathlib.Path
+        The raw BAM.
+    """
+    r2 = fastqs[1].name if layout == "pe" else ""
+    (tmp_path / "sheet.tsv").write_text(
+        "experiment\treplicate\ttype\tcrop_length\tr1\tr2\n"
+        f"X\t1\thistone\t{crop}\t{fastqs[0].name}\t{r2}\n"
+    )
+    files = {}
+    aligner = "bwa" if "aligner: bwa" in config else "bowtie2"
+    rules = ["align"]
+    if aligner == "bowtie2":
+        for p in (REFS / "bowtie2_build").glob("reference.*.bt2l"):
+            files[f"results-fixture/refs/bowtie2_build/{p.name}"] = p
+    else:
+        rules.append("bwa_index")
+    target = "results-fixture/fixture/X/align/X.rep1.bam"
+    done = run_rule(
+        tmp_path, rules, target, files, config=f"samples: sheet.tsv\n{config}"
+    )
+    assert done.returncode == 0, done.stderr[-3000:]
+    return tmp_path / target
+
+
+@pytest.mark.parametrize("layout", ["se", "pe"])
+def test_crop_matches_trimmomatic(tmp_path, layout):
+    """Check that cropping keeps Trimmomatic's reads and bases, pairs included."""
+    fastqs = [
+        synthetic_reads(
+            tmp_path / f"crop_R{m}.fastq.gz", 2000, random.Random(m), (90, 110)
+        )
+        for m in ((1, 2) if layout == "pe" else (1,))
+    ]
+    bam = run_align(tmp_path, layout, fastqs, 100, "")
+    pe = layout == "pe"
+    out = encode(
+        f"trimmomatic/{layout}",
+        fastqs,
+        f"python3 $(which encode_task_trimmomatic.py) --fastq1 {fastqs[0].name} "
+        f"{'--fastq2 ' + fastqs[1].name + ' --paired-end' if pe else ''} "
+        "--crop-length 100 --crop-length-tol 2 --out-dir-R1 R1 --out-dir-R2 R2 --nth 2",
+    )
+    for mate in (1, 2) if pe else (1,):
+        theirs = fastq_reads(next((out / f"R{mate}").glob("*.fastq.gz")))
+        assert reads(bam, mate if pe else 0) == theirs
+
+
+@pytest.mark.parametrize(
+    ("layout", "config", "flags"),
+    [
+        ("se", "", ""),
+        ("pe", "", "--paired-end"),
+        (
+            "pe",
+            "  bwa_mem_min_read_len: 70\n",
+            "--paired-end --use-bwa-mem-for-pe --bwa-mem-read-len-limit 70",
+        ),
+    ],
+)
+def test_bwa_matches_encode(tmp_path, run, layout, config, flags):
+    """Check bwa aln and bwa mem alignments against ENCODE's bwa task."""
+    exp = "YCR" if layout == "pe" else "BGT"
+    fastqs = []
+    for mate in (1, 2) if layout == "pe" else (1,):
+        path = tmp_path / f"bwa_R{mate}.fastq.gz"
+        path.write_bytes(
+            gzip.compress(
+                "".join(
+                    f"{x}\n"
+                    for x in lines(FIXTURE / f"{exp}_rep1_R{mate}.fastq.gz")[:40000]
+                ).encode()
+            )
+        )
+        fastqs.append(path)
+    bam = run_align(tmp_path, layout, fastqs, 0, f"params:\n  aligner: bwa\n{config}")
+    index = sorted((tmp_path / "results-fixture/refs/bwa_index").glob("reference.*"))
+    out = encode(
+        f"bwa/{layout}{'.mem' if 'mem' in flags else ''}",
+        [*fastqs, *index],
+        f"python3 $(which encode_task_bwa.py) reference {' '.join(p.name for p in fastqs)} "
+        f"{flags} --nth 4 --mem-gb 4",
+    )
+    assert alignments(bam) == alignments(next(out.glob("*.bam")))

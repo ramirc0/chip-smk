@@ -1,9 +1,11 @@
 """Check sheet validation, failure behavior and the shape of the job graph."""
 
+import gzip
 import re
 
+import polars as pl
 import pytest
-from conftest import CONFIG, ROOT, snakemake
+from conftest import CHRSZ, CONFIG, ROOT, lines, run_rule, snakemake
 
 HEADER = "experiment\treplicate\ttype\tcontrol\tcrop_length\tr1\tr2\n"
 CHIP = "Chip\t1\ttf\tInput\t\tchip_R1.fastq.gz\t\n"
@@ -108,3 +110,84 @@ def test_valid_sheet_plans_a_run(tmp_path):
     done = dry_run(tmp_path, HEADER + CHIP + INPUT)
     assert done.returncode == 0, done.stderr[-3000:]
     assert "choose_ctl" in done.stdout
+
+
+FIXTURE_SHEET = ROOT / ".tests/integration/samples.tsv"
+PREFIX = "results-fixture/fixture"
+
+
+def test_tagalign_job_fails_on_a_corrupt_bam(tmp_path):
+    """Check that a corrupt BAM fails the tagAlign job instead of leaving empty files."""
+    done = run_rule(
+        tmp_path,
+        "tagalign",
+        f"{PREFIX}/YCR/tagalign/YCR.rep1.tagAlign.gz",
+        {f"{PREFIX}/YCR/filter/YCR.rep1.bam": b"not a BAM"},
+    )
+    assert done.returncode != 0
+
+
+def test_frip_job_fails_on_unreadable_peaks(tmp_path, run):
+    """Check that a bedtools error fails the FRiP job instead of reporting 0."""
+    files = {
+        f"{PREFIX}/BGT1/{p}": run / f"BGT1/{p}"
+        for p in (
+            "tagalign/BGT1.rep1.tagAlign.gz",
+            "tagalign/BGT1.rep1.tagAlign.counts",
+            "xcor/BGT1.rep1.fraglen",
+            "overlap/BGT1.rep1-pr1_vs_rep1-pr2.bfilt.narrowPeak.gz",
+        )
+    }
+    files["results-fixture/refs/reference.chromsizes"] = CHRSZ
+    files[f"{PREFIX}/BGT1/macs3/BGT1.rep1.bfilt.narrowPeak.gz"] = gzip.compress(
+        b"chr19\tnot\ta peak\n"
+    )
+    done = run_rule(tmp_path, "frip", f"{PREFIX}/BGT1/frip/BGT1.rep1.tsv", files)
+    assert done.returncode != 0
+
+
+def test_idr_with_too_few_peaks_writes_empty_sets(tmp_path, run):
+    """Check that IDR on fewer than 20 merged peaks gives empty results, not a failure."""
+    files = {"results-fixture/refs/reference.chromsizes": CHRSZ}
+    for sample in ("rep1", "rep2", "pooled"):
+        peaks = lines(run / f"YCR/spp/YCR.{sample}.regionPeak.gz")[:5]
+        files[f"{PREFIX}/YCR/spp/YCR.{sample}.regionPeak.gz"] = gzip.compress(
+            "".join(f"{x}\n" for x in peaks).encode()
+        )
+    target = f"{PREFIX}/YCR/idr/YCR.rep1_vs_rep2.regionPeak.gz"
+    done = run_rule(tmp_path, "idr", target, files)
+    assert done.returncode == 0, done.stderr[-3000:]
+    assert lines(tmp_path / target) == []
+
+
+def test_shared_control_is_processed_once(run):
+    """Check that two experiments sharing a control call against the same files."""
+    tables = [
+        pl.read_csv(run / f"{exp}/choose_ctl/{exp}.tsv", separator="\t")
+        for exp in ("YCR", "YCR_h")
+    ]
+    assert tables[0].equals(tables[1])
+    subsamples = sorted((run / "YCR_ctl/tagalign").glob("*.sub*.tagAlign.gz"))
+    assert len(subsamples) == tables[0]["subsample"].n_unique()
+
+
+def test_xcor_trims_only_when_every_read_is_long_enough(run):
+    """Check ENCODE's all-or-nothing trim: 100 bp YCR reads trimmed, 36 bp BGT reads not."""
+    note = "no trimming"
+    assert note not in (ROOT / "logs/fixture/xcor_tagalign/YCR.rep1.txt").read_text()
+    assert note in (ROOT / "logs/fixture/xcor_tagalign/BGT.rep1.txt").read_text()
+
+
+def test_true_rep_only_drops_pseudoreplicates(tmp_path):
+    """Check that true_rep_only plans no pseudoreplicate or reproducibility jobs."""
+    done = dry_run(
+        tmp_path,
+        FIXTURE_SHEET.read_text(),
+        "--forceall",
+        config="params:\n  true_rep_only: true\n",
+    )
+    assert done.returncode == 0, done.stderr[-3000:]
+    jobs = done.stdout
+    for rule in ("pseudoreps", "macs3_pseudorep", "reproducibility"):
+        assert f"\n{rule} " not in jobs
+    assert "\noverlap " in jobs and "\nidr " in jobs

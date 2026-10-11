@@ -199,8 +199,8 @@ def run_rule(workdir, rule, target, files, config=None):
     ----------
     workdir : pathlib.Path
         Scratch directory, e.g. pytest's ``tmp_path``.
-    rule : str
-        Rule to run.
+    rule : str or list of str
+        Rule or rules to run.
     target : str
         Output to request, relative to ``workdir``.
     files : dict of str to bytes or pathlib.Path
@@ -223,6 +223,7 @@ def run_rule(workdir, rule, target, files, config=None):
             shutil.copy(content, dest)
         else:
             dest.write_bytes(content)
+    rules = [rule] if isinstance(rule, str) else rule
     configs = [CONFIG]
     if config:
         (workdir / "extra.yaml").write_text(config)
@@ -237,9 +238,9 @@ def run_rule(workdir, rule, target, files, config=None):
         "--configfile",
         *configs,
         "--allowed-rules",
-        rule,
+        *rules,
         "--forcerun",
-        rule,
+        *rules,
         "--retries",
         "0",
         target,
