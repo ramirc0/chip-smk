@@ -1,17 +1,3 @@
-logs
-results
-config/*.tsv
-!config/samples.example.tsv
-# copy from config.yaml.template, then edit
-config/config.yaml
-.snakemake
-scratch
-.conda
-resources
-benchmarks
-.tmp
-results*/
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
@@ -232,3 +218,17 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+logs
+results
+config/*.tsv
+!config/samples.example.tsv
+# copy from config.yaml.template, then edit
+config/config.yaml
+.snakemake
+scratch
+.conda
+resources
+benchmarks
+.tmp
+results*/
