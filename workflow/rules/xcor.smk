@@ -119,6 +119,8 @@ rule plot_xcor:
     output:
         svg=f"{OUTDIR}/{{exp}}/xcor/{{exp}}.{{rep}}.svg",
         png=f"{OUTDIR}/{{exp}}/xcor/{{exp}}.{{rep}}.png",
+    params:
+        title=lambda w: f"{w.exp} {w.rep}",
     log:
         f"{LOGDIR}/plot_xcor/{{exp}}.{{rep}}.txt",
     benchmark:
@@ -132,7 +134,7 @@ rule plot_xcor:
         python {workflow.basedir:q}/scripts/plot_xcor.py \
             --qc {input.qc:q} \
             --profile {input.profile:q} \
-            --title "{wildcards.exp} {wildcards.rep}" \
+            --title {params.title:q} \
             --output {output.svg:q}
         """
 

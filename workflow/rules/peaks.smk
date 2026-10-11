@@ -370,6 +370,7 @@ rule plot_idr:
         png=f"{OUTDIR}/{{exp}}/idr/{{exp}}.{{pair}}.png",
     params:
         threshold=lambda w: config["params"]["idr_thresh"],
+        title=lambda w: f"{w.exp} {w.pair}",
     log:
         f"{LOGDIR}/plot_idr/{{exp}}.{{pair}}.txt",
     benchmark:
@@ -383,7 +384,7 @@ rule plot_idr:
         python {workflow.basedir:q}/scripts/plot_idr.py \
             --input {input:q} \
             --threshold {params.threshold:q} \
-            --title "{wildcards.exp} {wildcards.pair}" \
+            --title {params.title:q} \
             --output {output.svg:q}
         """
 
