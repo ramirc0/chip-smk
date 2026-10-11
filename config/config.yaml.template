@@ -1,0 +1,14 @@
+samples: config/samples.tsv
+outdir: results
+pixi_env: default
+run_id: default          # outputs go under results/<run_id>/; override per run
+
+references:
+  reference: resources/reference.txt
+
+analyze:
+  window: 100
+  threshold: 0.5
+  metric: mean
+  normalize: true
+  random_state: null

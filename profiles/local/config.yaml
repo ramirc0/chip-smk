@@ -1,0 +1,25 @@
+# Local execution.
+software-deployment-method:
+  - pixi
+# Snakemake copies every env package here. pixi installs from its own cache.
+# One copy per user instead of one per workdir.
+software-deployment-cache-prefix: ~/.cache/snakemake/software
+
+cores: 16
+printshellcmds: true
+rerun-incomplete: true
+keep-going: true
+show-failed-logs: true
+retries: 1
+benchmark-extended: true
+
+default-resources:          # fallback for trivial rules
+  mem_mb: 2000
+  runtime: 30
+
+set-threads:
+  analyze: 4
+
+set-resources:              # tune from benchmarks/ TSVs after a real run
+  prepare: {mem_mb: 2000}
+  analyze: {mem_mb: 8000}
