@@ -65,6 +65,8 @@ set-resources:              # starting values from atac-smk's benchmarks
     runtime: 720m
   xcor:
     mem_mb: 16000 * attempt
+  signal:
+    mem_mb: 24000 * attempt
 
 rerun-incomplete: true
 keep-going: true

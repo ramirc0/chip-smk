@@ -43,3 +43,4 @@ set-resources:              # starting values from atac-smk's benchmarks
   pbc_qc: {mem_mb: 24000}
   spp: {mem_mb: 32000}
   xcor: {mem_mb: 16000}
+  signal: {mem_mb: 24000}
