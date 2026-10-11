@@ -4,7 +4,8 @@
 # ENCODE's MACS2 signal tracks, one job per track. The bedGraphs are per million
 # reads (--SPMR), so -S scales the p-value track back: treatment tagAlign lines over
 # a million. Clamped to the contigs, sorted, and lines that start inside the one
-# before dropped.
+# before dropped. slop clamps every interval past a contig end to its last base, so
+# those lines tie: the sort's whole-line tiebreak and the awk pick the one kept.
 rule signal:
     input:
         counts=lambda w: counts(w.exp, sample_ta(w.exp, w.base)),

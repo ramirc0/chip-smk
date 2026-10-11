@@ -54,6 +54,9 @@ The SLURM profile holds Weng Lab cluster settings, such as partitions and the
 `cascadelake` constraint. Adapt them for another cluster with the
 [SLURM executor docs](https://snakemake.github.io/snakemake-plugin-catalog/plugins/executor/slurm.html).
 Tune `set-resources` from the `benchmarks/<run_id>/` TSVs after a first run.
+`run_spp.R` (rules `spp` and `xcor`) starts snow workers that detach from the
+job, so the benchmarks and the SLURM efficiency report miss their CPU and memory.
+Size `spp` from the job cgroup's `memory.peak` instead.
 
 ## Testing
 

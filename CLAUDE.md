@@ -44,6 +44,8 @@ pixi run snakemake --profile profiles/slurm --configfile .tests/validation/confi
 - chrM stays in BAMs and tagAligns, as ENCODE's `filter_chrs` is empty.
 - Plots use poikilos `plain`. `pk.save_figure()` writes SVG and PNG. Rules MUST declare both outputs.
 - Resources MUST be flat values. Never derive `mem_mb` or `runtime` from input size.
+- run_spp.R's snow workers detach, so benchmarks and sacct miss them. Size `spp` from the job cgroup's `memory.peak`.
+- The signal sort and de-overlap awk are needed: slop clamps intervals past a contig end into ties.
 - The `* attempt` retry scaling in `profiles/slurm/config.yaml` is intentional.
 - CLI `--set-threads` replaces the profile's whole mapping. Pass every rule.
 
