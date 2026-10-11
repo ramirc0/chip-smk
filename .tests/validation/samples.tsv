@@ -1,0 +1,20 @@
+# Four ENCODE4 experiments on GRCh38, compared with ENCODE's published QC by compare_encode.py.
+# Raw FASTQs where the mirror has them, cropped as ENCODE did; the rest rebuilt by make_inputs.sh
+# from ENCODE's unfiltered BAMs, which already hold the cropped reads.
+experiment	replicate	type	control	crop_length	r1	r2
+ENCSR014YCR	1	tf	ENCSR398JTO	100	/data/projects/encode/data/ENCSR014YCR/ENCFF044LTS.fastq.gz	/data/projects/encode/data/ENCSR014YCR/ENCFF531UQG.fastq.gz
+ENCSR014YCR	2	tf	ENCSR398JTO	100	/data/projects/encode/data/ENCSR014YCR/ENCFF317NXG.fastq.gz	/data/projects/encode/data/ENCSR014YCR/ENCFF741BVE.fastq.gz
+ENCSR398JTO	1	control			/data/zusers/ramirezc/chip-smk-refs/validation/ENCFF611CPT_R1.fastq.gz	/data/zusers/ramirezc/chip-smk-refs/validation/ENCFF611CPT_R2.fastq.gz
+ENCSR398JTO	2	control			/data/zusers/ramirezc/chip-smk-refs/validation/ENCFF841YBE_R1.fastq.gz	/data/zusers/ramirezc/chip-smk-refs/validation/ENCFF841YBE_R2.fastq.gz
+ENCSR000BGT	1	tf	ENCSR000BGH	36	/data/projects/encode/data/ENCSR000BGT/ENCFF000NSW.fastq.gz	
+ENCSR000BGT	2	tf	ENCSR000BGH	36	/data/projects/encode/data/ENCSR000BGT/ENCFF000NSX.fastq.gz	
+ENCSR000BGH	1	control			/data/zusers/ramirezc/chip-smk-refs/validation/ENCFF745UOD_R1.fastq.gz	
+ENCSR000BGH	2	control			/data/zusers/ramirezc/chip-smk-refs/validation/ENCFF379YGC_R1.fastq.gz	
+ENCSR000BGH	3	control			/data/zusers/ramirezc/chip-smk-refs/validation/ENCFF070THX_R1.fastq.gz	
+ENCSR736ZEG	1	histone	ENCSR982AYN		/data/zusers/ramirezc/chip-smk-refs/validation/ENCFF587OER_R1.fastq.gz	/data/zusers/ramirezc/chip-smk-refs/validation/ENCFF587OER_R2.fastq.gz
+ENCSR736ZEG	2	histone	ENCSR982AYN		/data/zusers/ramirezc/chip-smk-refs/validation/ENCFF116ZVL_R1.fastq.gz	/data/zusers/ramirezc/chip-smk-refs/validation/ENCFF116ZVL_R2.fastq.gz
+ENCSR982AYN	1	control			/data/zusers/ramirezc/chip-smk-refs/validation/ENCFF216JKP_R1.fastq.gz	/data/zusers/ramirezc/chip-smk-refs/validation/ENCFF216JKP_R2.fastq.gz
+ENCSR982AYN	2	control			/data/zusers/ramirezc/chip-smk-refs/validation/ENCFF845ZAN_R1.fastq.gz	/data/zusers/ramirezc/chip-smk-refs/validation/ENCFF845ZAN_R2.fastq.gz
+ENCSR243BPI	1	tf	ENCSR346XJA		/data/zusers/ramirezc/chip-smk-refs/validation/ENCFF941QLJ_R1.fastq.gz	
+ENCSR243BPI	2	tf	ENCSR346XJA		/data/zusers/ramirezc/chip-smk-refs/validation/ENCFF902AQN_R1.fastq.gz	
+ENCSR346XJA	1	control			/data/zusers/ramirezc/chip-smk-refs/validation/ENCFF093EYW_R1.fastq.gz	
