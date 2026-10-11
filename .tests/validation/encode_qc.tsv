@@ -1,5 +1,6 @@
 # ENCODE4 published QC of the validation experiments, fetched 2026-10-11 from the ENCODE portal
-# (quality_metrics of the filtered BAMs and of the optimal and conservative peak files).
+# (quality_metrics of the filtered BAMs and of the optimal and conservative peak files), and the
+# pooled signal bigWigs of the analysis that made those peak files.
 experiment	section	unit	metric	value
 ENCSR014YCR	lib_complexity.lib_complexity	rep1	NRF	0.85009
 ENCSR014YCR	lib_complexity.lib_complexity	rep1	PBC1	0.848199
@@ -22,6 +23,8 @@ ENCSR014YCR	peak_enrich.frac_reads_in_peaks.idr	optimal	frip	0.11622988027789771
 ENCSR014YCR	files	conservative	path	ENCSR014YCR/ENCFF467OPR.bed.gz
 ENCSR014YCR	replication.reproducibility	idr	N_consv	41090
 ENCSR014YCR	peak_enrich.frac_reads_in_peaks.idr	conservative	frip	0.11602797682806965
+ENCSR014YCR	signal	pooled	fc	ENCSR014YCR/ENCFF751UNU.bigWig
+ENCSR014YCR	signal	pooled	pval	ENCSR014YCR/ENCFF441LTE.bigWig
 ENCSR000BGT	lib_complexity.lib_complexity	rep1	NRF	0.950885
 ENCSR000BGT	lib_complexity.lib_complexity	rep1	PBC1	0.95347
 ENCSR000BGT	lib_complexity.lib_complexity	rep1	PBC2	22.187815
@@ -43,6 +46,8 @@ ENCSR000BGT	peak_enrich.frac_reads_in_peaks.idr	optimal	frip	0.11432589932274435
 ENCSR000BGT	files	conservative	path	ENCSR000BGT/ENCFF523WHP.bed.gz
 ENCSR000BGT	peak_enrich.frac_reads_in_peaks.idr	conservative	frip	0.10663433533411333
 ENCSR000BGT	replication.reproducibility	idr	N_consv	31237
+ENCSR000BGT	signal	pooled	fc	ENCSR000BGT/ENCFF013ZCI.bigWig
+ENCSR000BGT	signal	pooled	pval	ENCSR000BGT/ENCFF716MIY.bigWig
 ENCSR736ZEG	align_enrich.xcor_score	rep1	estimated_fragment_len	210
 ENCSR736ZEG	align_enrich.xcor_score	rep1	NSC	1.085052
 ENCSR736ZEG	align_enrich.xcor_score	rep1	RSC	1.56344
@@ -64,6 +69,8 @@ ENCSR736ZEG	peak_enrich.frac_reads_in_peaks.overlap	optimal	frip	0.1856576652738
 ENCSR736ZEG	files	conservative	path	ENCSR736ZEG/ENCFF583XCU.bed.gz
 ENCSR736ZEG	replication.reproducibility	overlap	N_consv	54101
 ENCSR736ZEG	peak_enrich.frac_reads_in_peaks.overlap	conservative	frip	0.18206732474174542
+ENCSR736ZEG	signal	pooled	fc	ENCSR736ZEG/ENCFF769ZOD.bigWig
+ENCSR736ZEG	signal	pooled	pval	ENCSR736ZEG/ENCFF786TBH.bigWig
 ENCSR243BPI	lib_complexity.lib_complexity	rep1	NRF	0.958907
 ENCSR243BPI	lib_complexity.lib_complexity	rep1	PBC1	0.959848
 ENCSR243BPI	lib_complexity.lib_complexity	rep1	PBC2	25.265888
@@ -85,3 +92,5 @@ ENCSR243BPI	replication.reproducibility	idr	reproducibility	pass
 ENCSR243BPI	files	conservative	path	ENCSR243BPI/ENCFF261LQO.bed.gz
 ENCSR243BPI	replication.reproducibility	idr	N_consv	44915
 ENCSR243BPI	peak_enrich.frac_reads_in_peaks.idr	conservative	frip	0.10255700728928484
+ENCSR243BPI	signal	pooled	fc	ENCSR243BPI/ENCFF141VSH.bigWig
+ENCSR243BPI	signal	pooled	pval	ENCSR243BPI/ENCFF069GGI.bigWig

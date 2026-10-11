@@ -9,10 +9,12 @@ validation run:
 """
 
 import argparse
+import math
 import subprocess
 from pathlib import Path
 
 import polars as pl
+import pyBigWig
 from zlib_ng import gzip_ng
 
 ENCODE_DATA = Path("/data/projects/encode/data")
@@ -73,6 +75,30 @@ def peaks_hit(a, b):
     return len(hits.stdout.splitlines()) / peak_count(a)
 
 
+def bigwig_stats(path):
+    """Return a bigWig's mean, max and standard deviation, as ``bigWigInfo`` reports them.
+
+    Parameters
+    ----------
+    path : pathlib.Path
+        bigWig file.
+
+    Returns
+    -------
+    dict of str to float
+        ``mean``, ``max`` and ``std`` over the covered bases, from the header's sums.
+    """
+    bw = pyBigWig.open(str(path))
+    h = bw.header()
+    bw.close()
+    n, total = h["nBasesCovered"], h["sumData"]
+    return {
+        "mean": total / n,
+        "max": h["maxVal"],
+        "std": math.sqrt((h["sumSquared"] - total * total / n) / (n - 1)),
+    }
+
+
 def our_value(ours, row, sets):
     """Look up our value for one ENCODE row.
 
@@ -107,6 +133,8 @@ def our_value(ours, row, sets):
 def main(argv=None):
     """Print each metric per experiment, ours beside ENCODE's, then peak agreement.
 
+    The pooled signal tracks follow, as their mean, max and standard deviation.
+
     Parameters
     ----------
     argv : list of str, optional
@@ -135,7 +163,8 @@ def main(argv=None):
 
     for (exp,), rows in encode.group_by("experiment", maintain_order=True):
         print(f"\n{exp}\n{'metric':<48}{'ours':>14}{'ENCODE':>14}")
-        for row in rows.filter(pl.col("section") != "files").iter_rows(named=True):
+        metrics = rows.filter(~pl.col("section").is_in(["files", "signal"]))
+        for row in metrics.iter_rows(named=True):
             label = f"{row['section'].split('.')[-1]} {row['unit']} {row['metric']}"
             mine = our_value(ours, row, sets)
             print(f"{label:<48}{_short(mine):>14}{_short(row['value']):>14}")
@@ -151,6 +180,13 @@ def main(argv=None):
                 f"{kind} peaks: ours in ENCODE's {peaks_hit(mine, theirs):.3f}, "
                 f"ENCODE's in ours {peaks_hit(theirs, mine):.3f}"
             )
+        signal = rows.filter(pl.col("section") == "signal")
+        for unit, track, path in signal.select("unit", "metric", "value").rows():
+            mine = bigwig_stats(run / exp / "signal" / f"{exp}.{unit}.{track}.bigWig")
+            theirs = bigwig_stats(ENCODE_DATA / path)
+            for stat in ("mean", "max", "std"):
+                label = f"signal {unit} {track} {stat}"
+                print(f"{label:<48}{mine[stat]:>14.4g}{theirs[stat]:>14.4g}")
 
 
 def _short(value):
