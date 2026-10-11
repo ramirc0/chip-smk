@@ -4,6 +4,11 @@
 # read, unmapped ones included, after ENCODE's crop, so the sheet leaves their
 # crop_length empty. Their reads come out in coordinate order, not ENCODE's, so the
 # seeded xcor subsample and pseudoreplicates differ a little from ENCODE's draws.
+# The ChIP replicates of ENCSR014YCR and ENCSR000BGT use ENCODE's own FASTQs. Their
+# fragment lengths equal ENCODE's (235, 240, 105, 105), and BGT's NSC and RSC agree
+# to 6 decimals. ENCSR736ZEG and ENCSR243BPI are rebuilt. Their fragment lengths are
+# 5-15 bp off: with NSC 1.08-1.22, the cross-correlation peak is flat, so its argmax
+# moves with the subsample.
 # Run from the repository root:
 #   pixi run --manifest-path workflow/envs/pixi.toml -e test bash .tests/validation/make_inputs.sh
 set -euo pipefail
