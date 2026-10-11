@@ -22,6 +22,7 @@ from conftest import (
 
 # Library, layout and ENCODE's paired-end flag of the two fixture experiments.
 LIBRARIES = [("YCR", "rep1", "--paired-end"), ("BGT", "rep1", "")]
+CROP = {"YCR": 100, "BGT": 36}
 REGEX = "--regex-bfilt-peak-chr-name 'chr[\\dXY]+'"
 
 
@@ -187,6 +188,27 @@ def test_raw_alignment_counts_match_encode(run, exp, lib, paired):
     assert int(samstats[0].split()[0]) == passed["total"]
     mapped = next(x for x in samstats if " mapped (" in x)
     assert int(mapped.split()[0]) == passed["mapped"]
+
+
+@pytest.mark.parametrize(("exp", "lib", "paired"), LIBRARIES)
+def test_bowtie2_matches_encode(run, exp, lib, paired):
+    """Check the cropped alignments against ENCODE's Trimmomatic and bowtie2 tasks."""
+    mates = (1, 2) if paired else (1,)
+    fastqs = [FIXTURE / f"{exp}_{lib}_R{m}.fastq.gz" for m in mates]
+    index = sorted((REFS / "bowtie2_build").glob("reference.*.bt2l"))
+    r2 = f"--fastq2 {fastqs[1].name} --out-dir-R2 R2" if paired else ""
+    out = encode(
+        f"bowtie2/{exp}.{lib}",
+        [*fastqs, *index],
+        f"python3 $(which encode_task_trimmomatic.py) --fastq1 {fastqs[0].name} {r2} "
+        f"{paired} --crop-length {CROP[exp]} --crop-length-tol 2 --out-dir-R1 R1 --nth 8 && "
+        f"python3 $(which encode_task_bowtie2.py) reference R1/*.fastq.gz "
+        f"{'R2/*.fastq.gz' if paired else ''} --multimapping 0 {paired} "
+        "--mem-gb 8 --nth 8 --out-dir align",
+    )
+    ours = alignments(run / f"{exp}/align/{exp}.{lib}.bam")
+    theirs = alignments(next((out / "align").glob("*.bam")))
+    assert first_difference(ours, theirs) is None
 
 
 @pytest.mark.parametrize(("exp", "lib", "paired"), LIBRARIES)
