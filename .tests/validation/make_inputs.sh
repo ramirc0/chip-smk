@@ -2,7 +2,9 @@
 # Rebuilds the FASTQs of the validation libraries whose raw reads are not on the
 # Weng Lab ENCODE mirror, from ENCODE's unfiltered BAMs. Those BAMs hold every
 # read, unmapped ones included, after ENCODE's crop, so the sheet leaves their
-# crop_length empty. Run from the repository root:
+# crop_length empty. Their reads come out in coordinate order, not ENCODE's, so the
+# seeded xcor subsample and pseudoreplicates differ a little from ENCODE's draws.
+# Run from the repository root:
 #   pixi run --manifest-path workflow/envs/pixi.toml -e test bash .tests/validation/make_inputs.sh
 set -euo pipefail
 
