@@ -24,7 +24,7 @@ default-resources:
 set-threads:              # single-threaded rules get the default, 1
   bowtie2_build: 22
   fastp_qc: 8
-  align: 22
+  align: 44
   xcor_tagalign: 22
   filter: 22
   tagalign: 8
@@ -43,8 +43,8 @@ set-resources:              # from peak RSS and runtime of the ENCODE validation
     mem_mb: 8000 * attempt
     slurm_partition: 12hours
     runtime: 720m
-  align:
-    mem_mb: 64000 * attempt
+  align:                  # 44 x 1536M of sort buffer, plus bowtie2
+    mem_mb: 96000 * attempt
     slurm_partition: 12hours
     runtime: 720m
   xcor_tagalign:
