@@ -51,7 +51,7 @@ rule xcor_tagalign:
             | samtools view -@ {threads} -u -F 1804 -q {params.mapq} - \
             | samtools sort -@ {threads} -m 1536M -u -T "$tmp/sort" - \
             | bedtools bamtobed -i stdin \
-            | awk 'BEGIN {{ OFS = "\t" }} {{ $4 = "N"; $5 = "1000"; print }}' \
+            | bed_to_ta \
             | count {output.counts:q} \
             | pigz -n -p {threads} \
             > {output.ta:q}

@@ -183,6 +183,7 @@ TA_FUNCTIONS = r"""
         count() {{ awk -v out="$1" '{{ print; n++; b += length($0) + 1 }} END {{ printf "%d\t%d\n", n, b > out }}'; }}
         keystream() {{ openssl enc -aes-256-ctr -md md5 -pass pass:"$1" -nosalt < /dev/zero 2> /dev/null; }}
         unpair() {{ awk 'BEGIN {{ OFS = "\t" }} {{ print $1, $2, $3, $4, $5, $6; print $7, $8, $9, $10, $11, $12 }}'; }}
+        bed_to_ta() {{ awk 'BEGIN {{ OFS = "\t" }} {{ $4 = "N"; $5 = "1000"; print }}'; }}
 """
 
 

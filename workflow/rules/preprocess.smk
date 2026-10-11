@@ -309,7 +309,7 @@ rule tagalign:
                 | awk 'BEGIN {{ OFS = "\t" }} {{ print $1, $2, $3, "N", 1000, $9; print $4, $5, $6, "N", 1000, $10 }}'
         else
             bedtools bamtobed -i {input:q} \
-                | awk 'BEGIN {{ OFS = "\t" }} {{ $4 = "N"; $5 = "1000"; print }}'
+                | bed_to_ta
         fi \
             | count {output.counts:q} \
             | pigz -n -p {threads} \
