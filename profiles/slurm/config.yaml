@@ -5,7 +5,7 @@ software-deployment-method:
 # One copy per user instead of one per workdir.
 software-deployment-cache-prefix: ~/.cache/snakemake/software
 
-jobs: 40
+jobs: unlimited
 max-jobs-per-second: 5
 
 slurm-efficiency-report: true
@@ -13,31 +13,58 @@ slurm-efficiency-report-path: logs/efficiency
 slurm-efficiency-threshold: 0.8
 
 default-resources:
-  slurm_account: youraccount
-  slurm_partition: 12hours
-  runtime: 60m
-  mem_mb: 4000
-  # slurm_extra: "--exclude=node1,node2"   # e.g. nodes missing a shared mount
+  slurm_partition: 4hours
+  runtime: 240m
+  mem_mb: 8000 * attempt
+  constraint: cascadelake
+  slurm_extra: "--exclude=z1024 --cpu-freq=High-High:Performance"
 
-set-threads:
-  prepare: 1
-  analyze: 4
+set-threads:              # single-threaded rules get the default, 1
+  bowtie2_build: 22
+  fastp_qc: 8
+  align: 22
+  xcor_tagalign: 22
+  filter: 22
+  tagalign: 8
+  subsample_ta: 2
+  pseudoreps: 2
+  xcor: 2
+  spp: 6
+  frip: 2
+  count_signal: 4
+  jsd: 4
 
-set-resources:              # tune from benchmarks/ TSVs after a real run
-  prepare:
-    mem_mb: 2000 * attempt
-    runtime: 30m
-  analyze:
+set-resources:              # starting values from atac-smk's benchmarks
+  bowtie2_build:
+    mem_mb: 16000 * attempt
+  bwa_index:
     mem_mb: 8000 * attempt
-    runtime: 120m
-
-  # GPU rule pattern (uncomment + adapt for a CUDA rule):
-  #  fit:
-  #    slurm_partition: gpu
-  #    gres: gpu:1
-  #    tasks_per_gpu: 0     # suppress --ntasks-per-gpu (conflicts with cpus-per-task for pytorch)
-  #    mem_mb: 48000 * attempt
-  #    runtime: 1440m
+    slurm_partition: 12hours
+    runtime: 720m
+  align:
+    mem_mb: 64000 * attempt
+    slurm_partition: 12hours
+    runtime: 720m
+  xcor_tagalign:
+    mem_mb: 48000 * attempt
+    slurm_partition: 12hours
+    runtime: 720m
+  filter:
+    mem_mb: 64000 * attempt
+  tagalign:
+    mem_mb: 32000 * attempt
+  subsample_ta:
+    mem_mb: 24000 * attempt
+  pseudoreps:
+    mem_mb: 16000 * attempt
+  pbc_qc:
+    mem_mb: 24000 * attempt
+  spp:
+    mem_mb: 32000 * attempt
+    slurm_partition: 12hours
+    runtime: 720m
+  xcor:
+    mem_mb: 16000 * attempt
 
 rerun-incomplete: true
 keep-going: true

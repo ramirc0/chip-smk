@@ -1,11 +1,44 @@
-
 include: "rules/common.smk"
 include: "rules/preprocess.smk"
-include: "rules/analyze.smk"
+include: "rules/xcor.smk"
+include: "rules/peaks.smk"
+include: "rules/signal.smk"
+include: "rules/qc.smk"
 include: "rules/report.smk"
+
+
+def deliverables():
+    """Return the files `rule all` requests beyond the QC table.
+
+    Returns
+    -------
+    list of str
+        Per ChIP experiment: signal tracks, final peak sets, and the plots.
+    """
+    files = []
+    for exp in CHIPS:
+        prefix = f"{OUTDIR}/{exp}"
+        tracks = ["fc", "pval"] + ["positive", "negative"] * config["params"]["count_signal_track"]
+        files += [f"{prefix}/signal/{exp}.{b}.{t}.bigWig" for b in bases(exp) for t in tracks]
+        files += [f"{prefix}/xcor/{exp}.{r}.svg" for r in EXPERIMENTS[exp]["libs"]]
+        files += [f"{prefix}/gc_bias/{exp}.{r}.svg" for r in EXPERIMENTS[exp]["libs"]]
+        files += [f"{prefix}/jsd/{exp}.svg", f"{prefix}/peak_qc/{exp}.svg"]
+        if EXPERIMENTS[exp]["type"] == "tf":
+            files += [f"{prefix}/idr/{exp}.{p}.svg" for p in pairs(exp)]
+        if config["params"]["true_rep_only"]:
+            files += [peaks(exp, s, bfilt=True) for s in samples(exp)]
+            files += [pair_peaks(exp, m, p) for m in methods(exp) for p in pairs(exp)]
+        else:
+            files += [
+                f"{prefix}/reproducibility/{exp}.{m}.{k}.{peak_type(exp)}.gz"
+                for m in methods(exp)
+                for k in ("optimal", "conservative")
+            ]
+    return files
 
 
 rule all:
     input:
-        f"{OUTDIR}/report/summary.svg",
-        [f"{prefix(s)}.curve.svg" for s in SAMPLES],
+        f"{OUTDIR}/qc.tsv",
+        f"{OUTDIR}/qc.svg",
+        deliverables(),

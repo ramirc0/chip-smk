@@ -1,4 +1,6 @@
-sample_id	input	label
-sample_a	resources/sample_a.tsv	control
-sample_b	resources/sample_b.tsv	treated
-sample_c	resources/sample_c.tsv
+experiment	replicate	type	control	crop_length	r1	r2
+CTCF	1	tf	Input	100	resources/CTCF_rep1_R1.fastq.gz	resources/CTCF_rep1_R2.fastq.gz
+CTCF	2	tf	Input	100	resources/CTCF_rep2_R1.fastq.gz	resources/CTCF_rep2_R2.fastq.gz
+H3K27ac	1	histone	Input		resources/H3K27ac_rep1_L1.fastq.gz	
+H3K27ac	1	histone	Input		resources/H3K27ac_rep1_L2.fastq.gz	
+Input	1	control		100	resources/Input_rep1_R1.fastq.gz	resources/Input_rep1_R2.fastq.gz

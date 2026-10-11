@@ -5,7 +5,7 @@ software-deployment-method:
 # One copy per user instead of one per workdir.
 software-deployment-cache-prefix: ~/.cache/snakemake/software
 
-cores: 16
+cores: 22
 printshellcmds: true
 rerun-incomplete: true
 keep-going: true
@@ -13,13 +13,33 @@ show-failed-logs: true
 retries: 1
 benchmark-extended: true
 
-default-resources:          # fallback for trivial rules
-  mem_mb: 2000
-  runtime: 30
+default-resources:
+  mem_mb: 8000
+  runtime: 240
 
-set-threads:
-  analyze: 4
+set-threads:              # single-threaded rules get the default, 1
+  bowtie2_build: 22
+  fastp_qc: 8
+  align: 22
+  xcor_tagalign: 22
+  filter: 22
+  tagalign: 8
+  subsample_ta: 2
+  pseudoreps: 2
+  xcor: 2
+  spp: 6
+  frip: 2
+  count_signal: 4
+  jsd: 4
 
-set-resources:              # tune from benchmarks/ TSVs after a real run
-  prepare: {mem_mb: 2000}
-  analyze: {mem_mb: 8000}
+set-resources:              # starting values from atac-smk's benchmarks
+  bowtie2_build: {mem_mb: 16000}
+  align: {mem_mb: 64000}
+  xcor_tagalign: {mem_mb: 48000}
+  filter: {mem_mb: 64000}
+  tagalign: {mem_mb: 32000}
+  subsample_ta: {mem_mb: 24000}
+  pseudoreps: {mem_mb: 16000}
+  pbc_qc: {mem_mb: 24000}
+  spp: {mem_mb: 32000}
+  xcor: {mem_mb: 16000}
