@@ -1,0 +1,16 @@
+# chr19 and chrM reads of ENCODE experiments, built by make_fixture.sh.
+# YCR: ENCSR014YCR (ATF7, PE 100), control ENCSR398JTO. BGT: ENCSR000BGT (BATF, SE 36), control ENCSR000BGH.
+# YCR_h and BGT1 reuse those reads as histone experiments: one shares a control, one has none.
+experiment	replicate	type	control	crop_length	r1	r2
+YCR	1	tf	YCR_ctl	100	resources/fixture/YCR_rep1_R1.fastq.gz	resources/fixture/YCR_rep1_R2.fastq.gz
+YCR	2	tf	YCR_ctl	100	resources/fixture/YCR_rep2_R1.fastq.gz	resources/fixture/YCR_rep2_R2.fastq.gz
+YCR_ctl	1	control			resources/fixture/YCR_ctl1_R1.fastq.gz	resources/fixture/YCR_ctl1_R2.fastq.gz
+YCR_ctl	2	control			resources/fixture/YCR_ctl2_R1.fastq.gz	resources/fixture/YCR_ctl2_R2.fastq.gz
+YCR_h	1	histone	YCR_ctl	100	resources/fixture/YCR_rep1_R1.fastq.gz	resources/fixture/YCR_rep1_R2.fastq.gz
+YCR_h	2	histone	YCR_ctl	100	resources/fixture/YCR_rep2_R1.fastq.gz	resources/fixture/YCR_rep2_R2.fastq.gz
+BGT	1	tf	BGT_ctl	36	resources/fixture/BGT_rep1_R1.fastq.gz	
+BGT	2	tf	BGT_ctl	36	resources/fixture/BGT_rep2_R1.fastq.gz	
+BGT_ctl	1	control			resources/fixture/BGT_ctl1_R1.fastq.gz	
+BGT_ctl	2	control			resources/fixture/BGT_ctl2_R1.fastq.gz	
+BGT_ctl	3	control			resources/fixture/BGT_ctl3_R1.fastq.gz	
+BGT1	1	histone		36	resources/fixture/BGT_rep1_R1.fastq.gz	

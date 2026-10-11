@@ -1,4 +1,0 @@
-sample_id	input	label
-sample_a	resources/sample_a.tsv	control
-sample_b	resources/sample_b.tsv	treated
-sample_c	resources/sample_c.tsv
