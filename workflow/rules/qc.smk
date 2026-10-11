@@ -117,12 +117,18 @@ rule jsd:
         tmp=$(mktemp -d -p {params.tmp_dir:q})
         trap 'rm -rf "$tmp"' EXIT
 
+        # Without -M, -U keeps the records ENCODE's bedtools intersect -v keeps. -L
+        # filters on one thread, so the BAMs run at once.
         filtered=()
+        pids=()
         for bam in {input.bams:q} {input.control:q}; do
             out="$tmp/${{#filtered[@]}}.bam"
-            bedtools intersect -nonamecheck -v -abam "$bam" -b {input.blacklist:q} > "$out"
-            samtools index "$out"
+            {{ samtools view -@ 2 -b -L {input.blacklist:q} -U "$out" -o /dev/null "$bam" && samtools index "$out"; }} &
+            pids+=($!)
             filtered+=("$out")
+        done
+        for pid in "${{pids[@]}}"; do
+            wait "$pid"
         done
         controls=({input.control:q})
         jsd=()
