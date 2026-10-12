@@ -4,6 +4,12 @@ channels = ["conda-forge", "bioconda"]
 platforms = ["linux-64"]
 
 [dependencies]
+# The shell tools every rule calls, pinned instead of the host's. GNU, not uutils:
+# uutils shuf -n draws other lines from the same random source.
+coreutils = ">=9.12"
+gawk = ">=5.4.1"
+grep = ">=3.12"
+sed = ">=4.10"
 python = "3.13.*"
 bedtools = ">=2.31.1"
 bowtie2 = ">=2.5.5"
@@ -38,6 +44,10 @@ LC_ALL = "C"
 # idr 2.0.4.2, the last release, needs python <3.10, numpy <1.20 and scipy <1.10.
 # rapidgzip has no python 3.9 build; peak files are small enough for pigz.
 [feature.idr.dependencies]
+coreutils = ">=9.12"
+gawk = ">=5.4.1"
+grep = ">=3.12"
+sed = ">=4.10"
 python = "3.9.*"
 idr = ">=2.0.4.2"
 pigz = ">=2.8"
@@ -48,6 +58,10 @@ LC_ALL = "C"
 
 # run_spp.R for SPP peaks and cross-correlation.
 [feature.spp.dependencies]
+coreutils = ">=9.12"
+gawk = ">=5.4.1"
+grep = ">=3.12"
+sed = ">=4.10"
 phantompeakqualtools = ">=1.2.2"
 r-spp = ">=1.16"
 python = "3.13.*"
