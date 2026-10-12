@@ -43,7 +43,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/python_abi-3.13-9_cp313.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/tzdata-2026c-h151e31d_0.conda
       - pypi: git+https://github.com/cademirch/snakemake-software-deployment-plugin-pixi.git?rev=315e0f3113daefc2dfeda3a48777cd1acb2707e0#315e0f3113daefc2dfeda3a48777cd1acb2707e0
-      - pypi: git+https://github.com/snakemake/snakemake.git?rev=5bf5e21b0d0e7e65e247c1f2c61c1a4f74a1a752#5bf5e21b0d0e7e65e247c1f2c61c1a4f74a1a752
+      - pypi: git+https://github.com/snakemake/snakemake.git?rev=4523356973a83aa237a121717ee81dd2e09175da#4523356973a83aa237a121717ee81dd2e09175da
       - pypi: https://files.pythonhosted.org/packages/02/10/5da547df7a391dcde17f59520a231527b8571e6f46fc8efb02ccb370ab12/docutils-0.22.4-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/04/4b/29cac41a4d98d144bf5f6d33995617b185d14b22401f75ca86f384e87ff1/h11-0.16.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/05/d1/8952806fbf9583004ab479d8f58a9496c3d35f6b6009ddd458bdd9978eaf/dpath-2.2.0-py3-none-any.whl
@@ -1056,7 +1056,7 @@ packages:
   - aiofiles>=24.1.0,<25
   - httpx>=0.28.1,<0.29
   requires_python: '>=3.11,<4.0'
-- pypi: git+https://github.com/snakemake/snakemake.git?rev=5bf5e21b0d0e7e65e247c1f2c61c1a4f74a1a752#5bf5e21b0d0e7e65e247c1f2c61c1a4f74a1a752
+- pypi: git+https://github.com/snakemake/snakemake.git?rev=4523356973a83aa237a121717ee81dd2e09175da#4523356973a83aa237a121717ee81dd2e09175da
   name: snakemake
   version: 9.27.0
   requires_dist:
@@ -1078,7 +1078,7 @@ packages:
   - requests>=2.8.1,<3.0
   - tenacity>=9.1.4,<10.0
   - smart-open>=4.0,<8.0
-  - snakemake-interface-common>=1.23.0,<2.0
+  - snakemake-interface-common>=1.24.0,<2.0
   - snakemake-interface-executor-plugins>=9.4.0,<10.0
   - snakemake-interface-storage-plugins>=4.4.1,<5.0
   - snakemake-interface-report-plugins>=2.0.1,<3.0.0
