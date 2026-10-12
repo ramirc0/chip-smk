@@ -295,7 +295,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/xopen-2.1.0-pyh707e725_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/zarr-3.4.1-pyhc364b38_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/zipp-4.1.1-pyh5ded981_0.conda
-      - pypi: git+https://github.com/ramirc0/poikilos#905558905fec308d2d50e744cb2ebdca2466687a
+      - pypi: git+https://github.com/ramirc0/poikilos#81cd1cb24b293722a9735377de00e9235f09270d
   idr:
     channels:
     - url: https://conda.anaconda.org/conda-forge/
@@ -834,7 +834,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/xopen-2.1.0-pyh707e725_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/zarr-3.4.1-pyhc364b38_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/zipp-4.1.1-pyh5ded981_0.conda
-      - pypi: git+https://github.com/ramirc0/poikilos#905558905fec308d2d50e744cb2ebdca2466687a
+      - pypi: git+https://github.com/ramirc0/poikilos#81cd1cb24b293722a9735377de00e9235f09270d
 packages:
 - conda: https://conda.anaconda.org/bioconda/linux-64/bedtools-2.31.1-h13024bc_3.tar.bz2
   sha256: d8b7aef31be37da761a87e1263ea00d62b67134b546f018067786aa6d3dccfac
@@ -6991,7 +6991,7 @@ packages:
   run_exports: {}
   size: 24839
   timestamp: 1791091060207
-- pypi: git+https://github.com/ramirc0/poikilos#905558905fec308d2d50e744cb2ebdca2466687a
+- pypi: git+https://github.com/ramirc0/poikilos#81cd1cb24b293722a9735377de00e9235f09270d
   name: poikilos
   version: 0.1.0
   requires_dist:
