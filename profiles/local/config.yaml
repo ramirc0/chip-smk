@@ -32,7 +32,8 @@ set-threads:              # single-threaded rules get the default, 1
   count_signal: 4
   jsd: 4
 
-set-resources:              # from peak RSS of the ENCODE validation run
+set-resources:              # from peak RSS of the ENCODE validation run; bowtie2_build and
+                            # subsample_ta never ran there and keep starting values
   bowtie2_build: {mem_mb: 16000}
   align: {mem_mb: 64000}
   xcor_tagalign: {mem_mb: 16000}
@@ -40,5 +41,5 @@ set-resources:              # from peak RSS of the ENCODE validation run
   tagalign: {mem_mb: 24000}
   subsample_ta: {mem_mb: 24000}
   pbc_qc: {mem_mb: 24000}
-  spp: {mem_mb: 16000}
+  spp: {mem_mb: 32000}       # 26 GB cgroup memory.peak at 6 threads
   signal: {mem_mb: 16000}

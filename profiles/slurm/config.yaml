@@ -36,7 +36,8 @@ set-threads:              # single-threaded rules get the default, 1
   count_signal: 4
   jsd: 8
 
-set-resources:              # from peak RSS and runtime of the ENCODE validation run
+set-resources:              # from peak RSS and runtime of the ENCODE validation run; bowtie2_build,
+                            # bwa_index and subsample_ta never ran there and keep starting values
   bowtie2_build:
     mem_mb: 16000 * attempt
   bwa_index:
