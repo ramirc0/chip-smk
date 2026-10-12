@@ -2,8 +2,10 @@
 
 ENCODE ran older tools (bowtie2 2.3.4.3, MACS2 2.2.4, SPP 1.15) and marked
 duplicates with Picard, so values are close, not equal. The integration tests
-compare step by step on identical inputs. Run from the repository root after the
-validation run:
+compare step by step on identical inputs. ENCODE's published signal tracks come
+from pipeline 1.5.1 to 1.9.0. They cover the same bases as ours, but their sums run
+1-3% lower. On the fixture, our tracks' sums match v2.2.2's within 0.7%. Run from
+the repository root after the validation run:
 
     pixi run --manifest-path workflow/envs/pixi.toml python .tests/validation/compare_encode.py
 """
