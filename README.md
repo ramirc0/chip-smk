@@ -58,6 +58,10 @@ Tune `set-resources` from the `benchmarks/<run_id>/` TSVs after a first run.
 job, so the benchmarks and the SLURM efficiency report miss their CPU and memory.
 Size `spp` from the job cgroup's `memory.peak` instead.
 
+`tmp_dir` holds per-job scratch and defaults to `.tmp` in the workdir. Each job
+on the Weng Lab cluster gets a private node-local `/tmp`. Setting `tmp_dir: /tmp`
+there saved about 5% on `filter` and nothing on `signal`.
+
 ## Testing
 
 Both tests use data on the Weng Lab cluster, so they run only there.
@@ -92,6 +96,10 @@ pixi run --manifest-path workflow/envs/pixi.toml -e test bash .tests/validation/
 snakemake --profile profiles/slurm --configfile .tests/validation/config.yaml
 pixi run --manifest-path workflow/envs/pixi.toml python .tests/validation/compare_encode.py
 ```
+
+On the Weng Lab cluster the validation takes about 3 hours (369 jobs). Its
+critical path runs through the alignment of control ENCSR398JTO ctl1, then SPP
+on the pooled ENCSR014YCR reads.
 
 ## Inputs
 
