@@ -232,3 +232,4 @@ resources
 benchmarks
 .tmp
 results*/
+.claude
