@@ -1,0 +1,35 @@
+samples: /data/zusers/ramirezc/data/encode-chip-probound-htselex/samples.tsv
+outdir: results
+pixi_env: default
+run_id: encode-chip-probound-htselex
+mito_chr_name: chrM
+tmp_dir: .tmp            # per-job scratch; the login node's /tmp may be small
+
+references:
+  # GRCh38_no_alt_analysis_set_GCA_000001405.15, ENCODE's GRCh38 FASTA
+  fasta: /data/zusers/ramirezc/atac-smk/resources/GRCh38_no_alt_analysis_set_GCA_000001405.15.fasta
+  # ENCODE's exclusion list ENCFF356LFX
+  blacklist: /data/zusers/ramirezc/atac-smk-refs/GRCh38/ENCFF356LFX.bed.gz
+
+# ENCODE ChIP-seq pipeline v2.2.2 defaults.
+params:
+  aligner: bowtie2              # bowtie2 or bwa
+  bwa_mem_min_read_len: 0       # paired-end R1 reads this long use bwa mem; 0 = always bwa aln
+  crop_length_tol: 2            # cropping drops reads shorter than crop_length minus this
+  mapq_thresh: 30
+  subsample_reads: 0            # reads kept per ChIP replicate; 0 = all
+  ctl_subsample_reads: 0        # reads kept per control replicate; 0 = all
+  xcor_trim_bp: 50
+  xcor_subsample_reads: 15000000
+  ctl_depth_limit: 200000000
+  exp_ctl_depth_ratio_limit: 5.0
+  always_use_pooled_ctl: true
+  ctl_depth_ratio: 1.2
+  pval_thresh: 0.01             # MACS3
+  fdr_thresh: 0.01              # SPP
+  idr_thresh: 0.05
+  cap_num_peak:
+    spp: 300000
+    macs3: 500000
+  true_rep_only: false          # skip pseudoreplicates and the reproducible peak sets
+  count_signal_track: false     # 5' read count bigWigs per strand
