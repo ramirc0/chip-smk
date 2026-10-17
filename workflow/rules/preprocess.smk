@@ -7,6 +7,9 @@
 # records with equal coordinates keep it through the sort, and it seeds the shuffles.
 ALIGN_FUNCTIONS = r"""
         lanes() {{ local IFS=,; echo "$*"; }}
+        # One rapidgzip per lane: fed a BGZF lane without its EOF block and the next
+        # lane as one stream, rapidgzip reports junk at the boundary and can hang.
+        unzip_lanes() {{ local f; for f; do rapidgzip -d -c -P {threads} "$f"; done; }}
         # ENCODE's bwa check: drop every record of a read whose CIGAR, less deletions,
         # does not span its sequence. bwa writes a read's records together.
         drop_bad_cigar() {{
@@ -39,7 +42,7 @@ ALIGN_FUNCTIONS = r"""
                 bwa-pe)
                     # ENCODE's read length: the longest of the first million R1 reads.
                     length=$(awk 'NR % 4 == 2 && length($0) > m {{ m = length($0) }} NR == 4000000 {{ exit }} END {{ print m + 0 }}' \
-                        <(cat "${{r1[@]}}" | rapidgzip -d -c))
+                        <(unzip_lanes "${{r1[@]}}"))
                     if (( {params.bwa_mem} && length >= {params.bwa_mem} )); then
                         bwa mem -M -t {threads} {params.index:q} <(cat "${{r1[@]}}") <(cat "${{r2[@]}}")
                     else
@@ -203,11 +206,11 @@ rule align:
             if [[ {params.layout} == pe ]]; then
                 cutadapt -j {threads} -Z --length {params.crop} -m {params.min_length} \
                     -o "$tmp/R1.fastq.gz" -p "$tmp/R2.fastq.gz" \
-                    <(cat "${{r1[@]}}" | rapidgzip -d -c) <(cat "${{r2[@]}}" | rapidgzip -d -c)
+                    <(unzip_lanes "${{r1[@]}}") <(unzip_lanes "${{r2[@]}}")
                 r2=("$tmp/R2.fastq.gz")
             else
                 cutadapt -j {threads} -Z --length {params.crop} -m {params.min_length} \
-                    -o "$tmp/R1.fastq.gz" <(cat "${{r1[@]}}" | rapidgzip -d -c)
+                    -o "$tmp/R1.fastq.gz" <(unzip_lanes "${{r1[@]}}")
             fi
             r1=("$tmp/R1.fastq.gz")
         fi

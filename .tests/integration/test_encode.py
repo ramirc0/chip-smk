@@ -709,7 +709,7 @@ def test_count_signal_tracks_match_encode(run, exp):
         assert bigwig_stats(run / f"{exp}/signal/{exp}.rep1.{strand}.bigWig") == theirs
 
 
-def synthetic_reads(path, n, rng, lengths):
+def synthetic_reads(path, n, rng, lengths, prefix="r"):
     """Write reads drawn from the fixture genome, with varied lengths.
 
     Parameters
@@ -717,12 +717,14 @@ def synthetic_reads(path, n, rng, lengths):
     path : pathlib.Path
         Gzipped FASTQ to write.
     n : int
-        Reads to write. Read ``i`` is named ``r<i>`` in every file, so files
-        written with the same seed pair up.
+        Reads to write. Read ``i`` is named ``<prefix><i>`` in every file, so
+        files written with the same seed pair up.
     rng : random.Random
         Source of positions and lengths.
     lengths : tuple of int
         Smallest and largest read length.
+    prefix : str, default "r"
+        Read name prefix.
 
     Returns
     -------
@@ -736,7 +738,7 @@ def synthetic_reads(path, n, rng, lengths):
             start = rng.randrange(len(genome) - size)
             # Varied Phred+33 qualities, so Trimmomatic can detect the encoding.
             quality = "".join(rng.choice("#+5?I") for _ in range(size))
-            f.write(f"@r{i}\n{genome[start : start + size]}\n+\n{quality}\n")
+            f.write(f"@{prefix}{i}\n{genome[start : start + size]}\n+\n{quality}\n")
     return path
 
 
@@ -792,17 +794,15 @@ def fastq_reads(path):
     return {(fastq[i][1:].split()[0], fastq[i + 1]) for i in range(0, len(fastq), 4)}
 
 
-def run_align(tmp_path, layout, fastqs, crop, config):
+def run_align(tmp_path, lanes, crop, config):
     """Align reads alone, as the workflow's align rule, with a one-library sheet.
 
     Parameters
     ----------
     tmp_path : pathlib.Path
         Scratch directory.
-    layout : {"se", "pe"}
-        Single or paired end.
-    fastqs : list of pathlib.Path
-        R1, then R2 for paired end, in ``tmp_path``.
+    lanes : list of list of pathlib.Path
+        The library's lanes, each R1 then R2 for paired end, in ``tmp_path``.
     crop : int
         Crop length, 0 for none.
     config : str
@@ -813,10 +813,12 @@ def run_align(tmp_path, layout, fastqs, crop, config):
     pathlib.Path
         The raw BAM.
     """
-    r2 = fastqs[1].name if layout == "pe" else ""
     (tmp_path / "sheet.tsv").write_text(
         "experiment\treplicate\ttype\tcrop_length\tr1\tr2\n"
-        f"X\t1\thistone\t{crop}\t{fastqs[0].name}\t{r2}\n"
+        + "".join(
+            f"X\t1\thistone\t{crop}\t{lane[0].name}\t{lane[1].name if lane[1:] else ''}\n"
+            for lane in lanes
+        )
     )
     files = {}
     aligner = "bwa" if "aligner: bwa" in config else "bowtie2"
@@ -843,7 +845,7 @@ def test_crop_matches_trimmomatic(tmp_path, layout):
         )
         for m in ((1, 2) if layout == "pe" else (1,))
     ]
-    bam = run_align(tmp_path, layout, fastqs, 100, "")
+    bam = run_align(tmp_path, [fastqs], 100, "")
     pe = layout == "pe"
     out = encode(
         f"trimmomatic/{layout}",
@@ -855,6 +857,45 @@ def test_crop_matches_trimmomatic(tmp_path, layout):
     for mate in (1, 2) if pe else (1,):
         theirs = fastq_reads(next((out / f"R{mate}").glob("*.fastq.gz")))
         assert reads(bam, mate if pe else 0) == theirs
+
+
+@pytest.mark.parametrize("layout", ["se", "pe"])
+def test_crop_reads_every_lane_after_bgzf_without_eof(tmp_path, layout):
+    """Check that cropping reads every lane after a BGZF lane that lacks its EOF block.
+
+    ENCODE serves some FASTQs this way. rapidgzip, fed such a lane and the next
+    as one stream, reports junk at the boundary and can hang. It does so only
+    once the stream is a few MB long, so the second lane is large.
+    """
+    mates = (1, 2) if layout == "pe" else (1,)
+    lanes = [
+        [
+            synthetic_reads(
+                tmp_path / f"L{lane}_R{m}.fastq.gz",
+                n,
+                random.Random(10 * lane + m),
+                (100, 100),
+                f"l{lane}r",
+            )
+            for m in mates
+        ]
+        for lane, n in ((1, 2000), (2, 100000))
+    ]
+    eof = bytes.fromhex("1f8b08040000000000ff0600424302001b0003000000000000000000")
+    for path in lanes[0]:
+        bgzf = subprocess.run(
+            ["bgzip", "-c"],
+            input=gzip.decompress(path.read_bytes()),
+            capture_output=True,
+            check=True,
+        ).stdout
+        assert bgzf.endswith(eof)
+        path.write_bytes(bgzf[: -len(eof)])
+    bam = run_align(tmp_path, lanes, 100, "")
+    for i, mate in enumerate(mates):
+        expected = fastq_reads(lanes[0][i]) | fastq_reads(lanes[1][i])
+        assert reads(bam, mate if layout == "pe" else 0) == expected
+    assert "junk" not in (tmp_path / "logs/fixture/align/X.rep1.txt").read_text()
 
 
 @pytest.mark.parametrize(
@@ -884,7 +925,7 @@ def test_bwa_matches_encode(tmp_path, run, layout, config, flags):
             )
         )
         fastqs.append(path)
-    bam = run_align(tmp_path, layout, fastqs, 0, f"params:\n  aligner: bwa\n{config}")
+    bam = run_align(tmp_path, [fastqs], 0, f"params:\n  aligner: bwa\n{config}")
     index = sorted((tmp_path / "results-fixture/refs/bwa_index").glob("reference.*"))
     out = encode(
         f"bwa/{layout}{'.mem' if 'mem' in flags else ''}",

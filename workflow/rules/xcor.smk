@@ -32,10 +32,9 @@ rule xcor_tagalign:
         """ + ALIGN_FUNCTIONS + TA_FUNCTIONS + r"""
         r1=({input.r1:q})
         short=$(awk -v n={params.trim} 'NR % 4 == 2 && length($0) < n {{ print 1; exit }}' \
-            <(cat "${{r1[@]}}" | rapidgzip -d -c -P {threads}))
+            <(unzip_lanes "${{r1[@]}}"))
         if [[ -z "$short" ]]; then
-            cat "${{r1[@]}}" \
-                | rapidgzip -d -c -P {threads} \
+            unzip_lanes "${{r1[@]}}" \
                 | awk -v n={params.trim} '
                     NR % 4 == 2 {{ $0 = substr($0, 1, n); gsub(/\./, "N") }}
                     NR % 4 == 0 {{ $0 = substr($0, 1, n) }}
