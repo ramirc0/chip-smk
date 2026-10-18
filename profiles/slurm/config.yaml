@@ -51,12 +51,12 @@ set-resources:              # from peak RSS and runtime of the ENCODE validation
     mem_mb: 96000 * attempt
     slurm_partition: 12hours
     runtime: 720m
-  xcor_tagalign:
-    mem_mb: 16000 * attempt
+  xcor_tagalign:          # 22 x 1536M of sort buffer, plus bowtie2
+    mem_mb: 40000 * attempt
     slurm_partition: 12hours
     runtime: 720m
-  filter:
-    mem_mb: 48000 * attempt
+  filter:                 # 22 x 2560M of name-sort buffer for pairs
+    mem_mb: 64000 * attempt
   tagalign:
     mem_mb: 24000 * attempt
   subsample_ta:
