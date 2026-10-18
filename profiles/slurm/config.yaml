@@ -72,6 +72,6 @@ keep-going: true
 show-failed-logs: true
 benchmark-extended: true
 retries: 1
-slurm-requeue: false
+slurm-no-requeue: true
 printshellcmds: true
 latency-wait: 60
