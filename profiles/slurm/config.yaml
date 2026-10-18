@@ -13,13 +13,16 @@ slurm-efficiency-report-path: logs/efficiency
 slurm-efficiency-threshold: 0.8
 # The plugin's 40 s default makes every seconds-long job cost at least 40 s.
 slurm-init-seconds-before-status-checks: 10
+# The plugin merges these with nodes that fail mid-run. An --exclude in
+# slurm_extra would override both.
+slurm-exclude-failed-nodes: z1024
 
 default-resources:
   slurm_partition: 4hours
   runtime: 240m
   mem_mb: 8000 * attempt
   constraint: cascadelake
-  slurm_extra: "--exclude=z1024 --cpu-freq=High-High:Performance"
+  slurm_extra: "--cpu-freq=High-High:Performance"
 
 set-threads:              # single-threaded rules get the default, 1
   bowtie2_build: 22
