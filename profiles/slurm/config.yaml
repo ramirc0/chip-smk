@@ -55,8 +55,8 @@ set-resources:              # from peak RSS and runtime of the ENCODE validation
     mem_mb: 40000 * attempt
     slurm_partition: 12hours
     runtime: 720m
-  filter:                 # 22 x 2560M of name-sort buffer for pairs
-    mem_mb: 64000 * attempt
+  filter:                 # 22 x 2560M of name-sort buffer for pairs, plus overhead
+    mem_mb: 80000 * attempt
   tagalign:
     mem_mb: 24000 * attempt
   subsample_ta:
