@@ -206,6 +206,12 @@ for pixi deployment and SLURM. The rule envs live in a second pixi workspace,
 `run_spp.R`. `test` adds pytest, pytest-xdist and seqkit. pixi MUST be on `PATH`.
 Jobs install the envs on first use.
 
+`spp` takes r-spp from a local channel, built by `workflow/envs/recipes/r-spp`
+from a fork of CRAN 1.16.0. CRAN's build leaves the results of `spp_lwcc` and
+`spp_wtd` unprotected from garbage collection. On some inputs `run_spp.R` then
+fails with `INTEGER() can only be applied to a 'integer'`. Rebuild with the
+command in the recipe, into `/data/zusers/ramirezc/chip-smk-refs/conda-channel`.
+
 Add a dependency with `pixi add <pkg>` in `workflow/envs/`. After a hand edit,
 run `pixi lock` there (rules use `locked=True`). Any change to the manifest or
 lock reruns every rule. So does moving the workdir, because the env hash includes
@@ -253,7 +259,9 @@ Outputs match ENCODE's task scripts on the fixture, except where listed here.
   peaks are infinite. ENCODE fails the run.
 - A paired-end control subsample of odd size is rounded down to whole pairs.
   ENCODE raises.
-- phantompeakqualtools 1.2.2 and spp 1.16 replace 1.2.1 and 1.15.
+- phantompeakqualtools 1.2.2 and spp 1.16 replace 1.2.1 and 1.15. spp carries
+  the garbage-collection fix above. On inputs where unpatched 1.16 completes,
+  the peaks are identical.
 - bowtie2 2.5.5 replaces 2.3.4.3. The alignments match on the fixture.
 - ENCODE's `qc.json` writes the two-read count to `positions_with_one_read`, as
   its parser sets that key twice. `qc.tsv` keeps both counts under their own names.

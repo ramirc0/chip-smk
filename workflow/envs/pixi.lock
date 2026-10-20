@@ -11,6 +11,7 @@ environments:
     channels:
     - url: https://conda.anaconda.org/conda-forge/
     - url: https://conda.anaconda.org/bioconda/
+    - url: file:///data/zusers/ramirezc/chip-smk-refs/conda-channel/
     indexes:
     - https://pypi.org/simple
     packages:
@@ -307,6 +308,7 @@ environments:
     channels:
     - url: https://conda.anaconda.org/conda-forge/
     - url: https://conda.anaconda.org/bioconda/
+    - url: file:///data/zusers/ramirezc/chip-smk-refs/conda-channel/
     packages:
       linux-64:
       - conda: https://conda.anaconda.org/bioconda/linux-64/idr-2.0.4.2-py39h031d066_12.tar.bz2
@@ -394,8 +396,10 @@ environments:
     channels:
     - url: https://conda.anaconda.org/conda-forge/
     - url: https://conda.anaconda.org/bioconda/
+    - url: file:///data/zusers/ramirezc/chip-smk-refs/conda-channel/
     packages:
       linux-64:
+      - conda: /data/zusers/ramirezc/chip-smk-refs/conda-channel/linux-64/r-spp-1.16.0-r44_protect_0.conda
       - conda: https://conda.anaconda.org/bioconda/linux-64/bioconductor-biocparallel-1.40.0-r44he5774e6_1.tar.bz2
       - conda: https://conda.anaconda.org/bioconda/linux-64/bioconductor-biostrings-2.74.0-r44h3df3fcb_1.tar.bz2
       - conda: https://conda.anaconda.org/bioconda/linux-64/bioconductor-genomicranges-1.58.0-r44h3df3fcb_2.tar.bz2
@@ -407,7 +411,6 @@ environments:
       - conda: https://conda.anaconda.org/bioconda/linux-64/bioconductor-xvector-0.46.0-r44h15a9599_2.tar.bz2
       - conda: https://conda.anaconda.org/bioconda/linux-64/bioconductor-zlibbioc-1.52.0-r44h3df3fcb_2.tar.bz2
       - conda: https://conda.anaconda.org/bioconda/linux-64/htslib-1.24-ha79157c_0.conda
-      - conda: https://conda.anaconda.org/bioconda/linux-64/r-spp-1.16.0-r44he56ddfa_12.conda
       - conda: https://conda.anaconda.org/bioconda/linux-64/samtools-1.24-h9dcdb79_1.conda
       - conda: https://conda.anaconda.org/bioconda/linux-64/ucsc-bedclip-482-h0b57e2e_0.tar.bz2
       - conda: https://conda.anaconda.org/bioconda/noarch/bioconductor-biocgenerics-0.52.0-r44hdfd78af_3.tar.bz2
@@ -559,6 +562,7 @@ environments:
     channels:
     - url: https://conda.anaconda.org/conda-forge/
     - url: https://conda.anaconda.org/bioconda/
+    - url: file:///data/zusers/ramirezc/chip-smk-refs/conda-channel/
     indexes:
     - https://pypi.org/simple
     packages:
@@ -861,6 +865,26 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/zipp-4.1.1-pyh5ded981_0.conda
       - pypi: git+https://github.com/ramirc0/poikilos#81cd1cb24b293722a9735377de00e9235f09270d
 packages:
+- conda: /data/zusers/ramirezc/chip-smk-refs/conda-channel/linux-64/r-spp-1.16.0-r44_protect_0.conda
+  subdir: linux-64
+  sha256: f07d822c89ff71b7d9a388d1249dbc34bd369393ee8fad51db3977995d6b0d5a
+  md5: 74aa2e6d27405a7572c5041b48158c28
+  depends:
+  - r-base 4.4.*
+  - r-bh >=1.66
+  - r-rcpp
+  - bioconductor-rsamtools
+  - r-catools
+  - libgcc >=16
+  - libstdcxx >=16
+  - libzlib >=1.3.2,<2.0a0
+  - r-base >=4.4,<4.5.0a0
+  - bioconductor-rsamtools >=2.22.0,<2.23.0a0
+  channel: file:///data/zusers/ramirezc/chip-smk-refs/conda-channel
+  license: GPL-2.0-only
+  size: 372104
+  timestamp: 1792535801197
+  indexed_timestamp: 1792535892024
 - conda: https://conda.anaconda.org/bioconda/linux-64/bedtools-2.31.1-h13024bc_3.tar.bz2
   sha256: d8b7aef31be37da761a87e1263ea00d62b67134b546f018067786aa6d3dccfac
   md5: 99c4e90e82db906439e00beafb343d16
@@ -1102,6 +1126,7 @@ packages:
   - zstd >=1.5.7,<1.6.0a0
   license: GPL-3.0-or-later
   license_family: GPL3
+  purls: []
   run_exports:
     weak:
     - bowtie2 >=2.5.5,<3.0a0
@@ -1340,25 +1365,6 @@ packages:
     - pysam >=0.24.1,<0.25.0a0
   size: 2416044
   timestamp: 1788774307031
-- conda: https://conda.anaconda.org/bioconda/linux-64/r-spp-1.16.0-r44he56ddfa_12.conda
-  sha256: 2bacb1d93555f4b55722996816b89bed76e0663540b23528d81284c211828fa3
-  md5: 77d607ebca6c759c30a28b13e607a553
-  depends:
-  - bioconductor-rsamtools >=2.22.0,<2.23.0a0
-  - libgcc >=13
-  - libstdcxx >=13
-  - libzlib >=1.3.1,<2.0a0
-  - r-base >=4.4,<4.5.0a0
-  - r-bh >=1.66
-  - r-catools
-  - r-rcpp
-  license: GPL-2.0-only
-  license_family: GPL
-  run_exports:
-    weak:
-    - r-spp >=1.16.0,<2.0a0
-  size: 340487
-  timestamp: 1757988206692
 - conda: https://conda.anaconda.org/bioconda/linux-64/sambamba-1.0.1-he614052_4.tar.bz2
   sha256: cba5ef1c7dfea665255150356d61382aba823510cce3b5c739ee58990efb4132
   md5: e9aca4fe9956476094c4b5411a490516

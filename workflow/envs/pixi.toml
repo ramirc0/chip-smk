@@ -1,6 +1,6 @@
 [workspace]
 name = "chip-smk-envs"
-channels = ["conda-forge", "bioconda"]
+channels = ["conda-forge", "bioconda", "file:///data/zusers/ramirezc/chip-smk-refs/conda-channel"]
 platforms = ["linux-64"]
 
 [dependencies]
@@ -63,7 +63,8 @@ gawk = ">=5.4.1"
 grep = ">=3.12"
 sed = ">=4.10"
 phantompeakqualtools = ">=1.2.2"
-r-spp = ">=1.16"
+# Built by recipes/r-spp: CRAN 1.16.0 lets GC free spp_lwcc's results.
+r-spp = { version = "==1.16.0", build = "r44_protect_*", channel = "file:///data/zusers/ramirezc/chip-smk-refs/conda-channel" }
 python = "3.13.*"
 openssl = ">=3.6"
 pigz = ">=2.8"

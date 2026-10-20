@@ -1,0 +1,60 @@
+# spp 1.16.0 with PROTECT restored in spp_lwcc and spp_wtd. CRAN's build lets GC
+# free the peak vectors, so run_spp.R fails on some inputs with
+# "INTEGER() can only be applied to a 'integer'". Build into the local channel:
+#   pixi exec rattler-build build --recipe workflow/envs/recipes/r-spp \
+#     -c conda-forge -c bioconda --output-dir /data/zusers/ramirezc/chip-smk-refs/conda-channel
+# The pixi deployment plugin fetches cache assets over HTTP only, so seed its cache:
+#   cp /data/zusers/ramirezc/chip-smk-refs/conda-channel/linux-64/r-spp-*.conda \
+#     ~/.cache/snakemake/software/pixi/
+context:
+  version: "1.16.0"
+
+package:
+  name: r-spp
+  version: ${{ version }}
+
+source:
+  git: https://github.com/ramirc0/spp.git
+  rev: b90ea026e198a2e1450aba01df7a63813070491b
+
+build:
+  number: 0
+  string: r44_protect_${{ build_number }}
+  script:
+    - export BOOST_ROOT="$PREFIX"
+    - export LDFLAGS="$LDFLAGS -L$PREFIX/lib"
+    - $PREFIX/bin/R CMD INSTALL --build . --library=$PREFIX/lib/R/library
+
+requirements:
+  build:
+    - ${{ compiler('c') }}
+    - ${{ compiler('cxx') }}
+    - make
+  host:
+    - r-base 4.4.*
+    - r-bh >=1.66
+    - r-rcpp
+    - bioconductor-rsamtools
+    - r-catools
+    - zlib
+  run:
+    - r-base 4.4.*
+    - r-bh >=1.66
+    - r-rcpp
+    - bioconductor-rsamtools
+    - r-catools
+
+tests:
+  - files:
+      source:
+        - tests/
+    script:
+      - Rscript -e "library(spp)"
+      - Rscript tests/wdl-protect.R
+      - Rscript tests/bg-weight.R
+
+about:
+  homepage: https://github.com/ramirc0/spp
+  license: GPL-2.0-only
+  license_file: DESCRIPTION
+  summary: spp 1.16.0 with the spp_lwcc and spp_wtd PROTECT fix
