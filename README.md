@@ -126,7 +126,8 @@ ENCFF356LFX.
 
 ## Config
 
-`config/config.yaml.template` lists every key with ENCODE's defaults. Paths:
+`config/config.yaml.template` lists every key with ENCODE's defaults, except
+`count_signal_track`, which is on for model training. Paths:
 `samples`, `outdir`, `run_id`, `tmp_dir` and `references`. Parameters, under
 `params`: the aligner (`bowtie2` or `bwa`), MAPQ, subsampling, xcor, control
 choice, peak thresholds and caps, `true_rep_only` and `count_signal_track`.
@@ -165,7 +166,8 @@ Peaks, in `peaks.smk`:
   conservative sets and writes ENCODE's reproducibility QC.
 
 Signal, in `signal.smk`: `signal` writes fold-change and p-value bigWigs per
-replicate and pool. `count_signal` writes 5' read counts per strand.
+replicate and pool. `count_signal` writes 5' read counts per strand with
+`figwig bam2bw`, from the filtered BAMs.
 
 QC, in `qc.smk` and `report.smk`: `pbc_qc` (NRF, PBC1, PBC2), `frip` (shifted
 FRiP of every peak set a tagAlign scores, in one pass), `jsd` (deeptools
@@ -191,7 +193,7 @@ chromosome sizes go to `results/refs/`. Logs and benchmarks mirror the run under
 | `spp/`, `macs3/` | Peaks and filtered (`.bfilt.`) peaks per sample |
 | `overlap/`, `idr/` | Filtered peaks per pair; IDR scores and plots |
 | `reproducibility/` | Optimal and conservative peaks, reproducibility QC |
-| `signal/` | Fold-change and p-value bigWigs, optional count bigWigs |
+| `signal/` | Fold-change, p-value and 5' count bigWigs |
 | `frip/`, `pbc_qc/`, `jsd/`, `gc_bias/`, `peak_qc/` | QC tables and plots |
 
 `results/<run_id>/qc.tsv` holds every metric of the run, one per row:
@@ -263,6 +265,9 @@ Outputs match ENCODE's task scripts on the fixture, except where listed here.
   the garbage-collection fix above. On inputs where unpatched 1.16 completes,
   the peaks are identical.
 - bowtie2 2.5.5 replaces 2.3.4.3. The alignments match on the fixture.
+- `figwig bam2bw` writes the 5' count tracks from the filtered BAMs. ENCODE runs
+  `bedtools genomecov -5` on the tagAlign. The tracks match base for base, except
+  with `subsample_reads`, where figwig counts every read before subsampling.
 - ENCODE's `qc.json` writes the two-read count to `positions_with_one_read`, as
   its parser sets that key twice. `qc.tsv` keeps both counts under their own names.
 - `pct_duplicate_reads` is unrounded. ENCODE rounds the duplicate fraction to two
@@ -293,6 +298,8 @@ Martin, Marcel. 2011. “Cutadapt Removes Adapter Sequences from High-Throughput
 Mölder, Felix, Kim Philipp Jablonski, Brice Letcher, et al. 2021. “Sustainable Data Analysis with Snakemake.” F1000Research 10 (January): 33. https://doi.org/10.12688/f1000research.29032.3.
 
 Ramírez, Fidel, Devon P. Ryan, Björn Grüning, et al. 2016. “deepTools2: A next Generation Web Server for Deep-Sequencing Data Analysis.” Nucleic Acids Research 44 (W1): W160–65. https://doi.org/10.1093/nar/gkw257.
+
+Schreiber, Jacob. n.d. Figwig. Github. Accessed October 21, 2026. https://github.com/jmschrei/figwig.
 
 Tarasov, Artem, Albert J. Vilella, Edwin Cuppen, Isaac J. Nijman, and Pjotr Prins. 2015. “Sambamba: Fast Processing of NGS Alignment Formats.” Bioinformatics 31 (12): 2032–34. https://doi.org/10.1093/bioinformatics/btv098.
 

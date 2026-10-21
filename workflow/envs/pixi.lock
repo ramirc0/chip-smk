@@ -304,6 +304,14 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/zarr-3.4.1-pyhc364b38_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/zipp-4.1.1-pyh5ded981_0.conda
       - pypi: git+https://github.com/ramirc0/poikilos#81cd1cb24b293722a9735377de00e9235f09270d
+      - pypi: https://files.pythonhosted.org/packages/30/9b/1075a762fc3595d4b8ca688246be9f9ca68a29d0c05c336197670fbc7eff/biopython-1.88-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl
+      - pypi: https://files.pythonhosted.org/packages/35/ba/02b95fafb87b1ff6a4f6a79b06d70bbaf4657f86e95b993ac10104a8f804/pysam-0.24.1-cp313-cp313-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl
+      - pypi: https://files.pythonhosted.org/packages/48/d0/b1e0ed480da3eaff0bec35863b96d312ee8a5c144b3c8c70b7d616fb298a/figwig-0.1.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/a7/03/921a3d3c75785aca9ebfbfcabfbc3a1be12e2ab5265deb026d55a5a3f83e/tqdm-4.70.1-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/aa/b1/0b504ae34d1b79a6482a0ffcbfd1b103dde02329c11525033e02633f7984/numba-0.68.0-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl
+      - pypi: https://files.pythonhosted.org/packages/d0/5e/315011fbd60c83f064586aae3bd5388204401252c2c26e9cb219cef001e4/deflate-0.9.0-cp311-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl
+      - pypi: https://files.pythonhosted.org/packages/e4/23/fa1b17683c62880bf2618bfaac0616f8fcc531b2b247c3200335ecc97b28/pyfaidx-0.9.1-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/ed/c2/5e9d0773f1589397a3ea3dcfa4bbee36e2855ad938d738dd6ff9f505a59b/llvmlite-0.50.0-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl
   idr:
     channels:
     - url: https://conda.anaconda.org/conda-forge/
@@ -864,6 +872,14 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/zarr-3.4.1-pyhc364b38_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/zipp-4.1.1-pyh5ded981_0.conda
       - pypi: git+https://github.com/ramirc0/poikilos#81cd1cb24b293722a9735377de00e9235f09270d
+      - pypi: https://files.pythonhosted.org/packages/30/9b/1075a762fc3595d4b8ca688246be9f9ca68a29d0c05c336197670fbc7eff/biopython-1.88-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl
+      - pypi: https://files.pythonhosted.org/packages/35/ba/02b95fafb87b1ff6a4f6a79b06d70bbaf4657f86e95b993ac10104a8f804/pysam-0.24.1-cp313-cp313-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl
+      - pypi: https://files.pythonhosted.org/packages/48/d0/b1e0ed480da3eaff0bec35863b96d312ee8a5c144b3c8c70b7d616fb298a/figwig-0.1.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/a7/03/921a3d3c75785aca9ebfbfcabfbc3a1be12e2ab5265deb026d55a5a3f83e/tqdm-4.70.1-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/aa/b1/0b504ae34d1b79a6482a0ffcbfd1b103dde02329c11525033e02633f7984/numba-0.68.0-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl
+      - pypi: https://files.pythonhosted.org/packages/d0/5e/315011fbd60c83f064586aae3bd5388204401252c2c26e9cb219cef001e4/deflate-0.9.0-cp311-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl
+      - pypi: https://files.pythonhosted.org/packages/e4/23/fa1b17683c62880bf2618bfaac0616f8fcc531b2b247c3200335ecc97b28/pyfaidx-0.9.1-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/ed/c2/5e9d0773f1589397a3ea3dcfa4bbee36e2855ad938d738dd6ff9f505a59b/llvmlite-0.50.0-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl
 packages:
 - conda: /data/zusers/ramirezc/chip-smk-refs/conda-channel/linux-64/r-spp-1.16.0-r44_protect_0.conda
   subdir: linux-64
@@ -6854,3 +6870,86 @@ packages:
   - matplotlib>=3.11
   - adjusttext>=1.4.0 ; extra == 'labels'
   requires_python: '>=3.11'
+- pypi: https://files.pythonhosted.org/packages/30/9b/1075a762fc3595d4b8ca688246be9f9ca68a29d0c05c336197670fbc7eff/biopython-1.88-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl
+  name: biopython
+  version: '1.88'
+  sha256: 410eaa083fcc308b44c7051e597ae2f39e4068754bdd605cc32aed025aa132d0
+  requires_dist:
+  - numpy
+  requires_python: '>=3.10'
+- pypi: https://files.pythonhosted.org/packages/35/ba/02b95fafb87b1ff6a4f6a79b06d70bbaf4657f86e95b993ac10104a8f804/pysam-0.24.1-cp313-cp313-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl
+  name: pysam
+  version: 0.24.1
+  sha256: 68b742b2db84cf3982c21be69f886baf3d3cb49fbb070cb4a4c09b4d2fc907c0
+  requires_python: '>=3.9'
+- pypi: https://files.pythonhosted.org/packages/48/d0/b1e0ed480da3eaff0bec35863b96d312ee8a5c144b3c8c70b7d616fb298a/figwig-0.1.0-py3-none-any.whl
+  name: figwig
+  version: 0.1.0
+  sha256: acb84a2e92c4167c8b9973c25b7e09654d49945f6a7afbab2cb0eb2d8d3ed020
+  requires_dist:
+  - numba>=0.58
+  - numpy>=1.23
+  - biopython>=1.73 ; extra == 'bam2bw'
+  - deflate>=0.9 ; extra == 'bam2bw'
+  - isal>=1.0 ; extra == 'bam2bw'
+  - pyfaidx>=0.8 ; extra == 'bam2bw'
+  - pysam>=0.22 ; extra == 'bam2bw'
+  - tqdm>=4.60 ; extra == 'bam2bw'
+  - biopython>=1.73 ; extra == 'dev'
+  - build>=1.0 ; extra == 'dev'
+  - deflate>=0.9 ; extra == 'dev'
+  - isal>=1.0 ; extra == 'dev'
+  - pybigtools>=0.2.5,<0.3 ; extra == 'dev'
+  - pybigwig>=0.3.26 ; sys_platform != 'win32' and extra == 'dev'
+  - pyfaidx>=0.8 ; extra == 'dev'
+  - pysam>=0.22 ; sys_platform != 'win32' and extra == 'dev'
+  - pytest>=7.0 ; extra == 'dev'
+  - ruff>=0.4 ; extra == 'dev'
+  - tqdm>=4.60 ; extra == 'dev'
+  - twine>=4.0 ; extra == 'dev'
+  - sphinx-rtd-theme>=2.0 ; extra == 'docs'
+  - sphinx>=7.0 ; extra == 'docs'
+  - deflate>=0.9 ; extra == 'fast'
+  requires_python: '>=3.10'
+- pypi: https://files.pythonhosted.org/packages/a7/03/921a3d3c75785aca9ebfbfcabfbc3a1be12e2ab5265deb026d55a5a3f83e/tqdm-4.70.1-py3-none-any.whl
+  name: tqdm
+  version: 4.70.1
+  sha256: c293e525e6fef9c20e8728fd4612df02a0aa31bb5fe91ecd93e123b1b7bffa73
+  requires_dist:
+  - colorama ; sys_platform == 'win32'
+  - requests ; extra == 'discord'
+  - envwrap ; extra == 'discord'
+  - slack-sdk ; extra == 'slack'
+  - envwrap ; extra == 'slack'
+  - requests ; extra == 'telegram'
+  - envwrap ; extra == 'telegram'
+  - ipywidgets>=6 ; extra == 'notebook'
+  requires_python: '>=3.8'
+- pypi: https://files.pythonhosted.org/packages/aa/b1/0b504ae34d1b79a6482a0ffcbfd1b103dde02329c11525033e02633f7984/numba-0.68.0-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl
+  name: numba
+  version: 0.68.0
+  sha256: be647fbc60c18c0323b34479f80173879654894eec58ad061f4b1901e294d854
+  requires_dist:
+  - llvmlite>=0.50.0.dev0,<0.51
+  - numpy>=1.22,<2.6
+  requires_python: '>=3.10'
+- pypi: https://files.pythonhosted.org/packages/d0/5e/315011fbd60c83f064586aae3bd5388204401252c2c26e9cb219cef001e4/deflate-0.9.0-cp311-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl
+  name: deflate
+  version: 0.9.0
+  sha256: cfca14731727716ca0a112e26911a5a94998d31bb04eb5cc4bc268a5a308ba8a
+  requires_dist:
+  - pytest>=7 ; extra == 'test'
+  requires_python: '>=3.10'
+- pypi: https://files.pythonhosted.org/packages/e4/23/fa1b17683c62880bf2618bfaac0616f8fcc531b2b247c3200335ecc97b28/pyfaidx-0.9.1-py3-none-any.whl
+  name: pyfaidx
+  version: 0.9.1
+  sha256: 2a9a0c530b26c16aa72004ddfd86dad5d2e5e17fae13aeea15cd0d4882645d05
+  requires_dist:
+  - importlib-metadata ; python_full_version < '3.8'
+  - packaging
+  requires_python: '>=3.7'
+- pypi: https://files.pythonhosted.org/packages/ed/c2/5e9d0773f1589397a3ea3dcfa4bbee36e2855ad938d738dd6ff9f505a59b/llvmlite-0.50.0-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl
+  name: llvmlite
+  version: 0.50.0
+  sha256: 425845f415a06dc50db08db033c6b568e0d85c4937e932c605a4d49e1514b2da
+  requires_python: '>=3.10'

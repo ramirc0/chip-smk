@@ -51,10 +51,15 @@ rule signal:
         """
 
 
-# ENCODE's count signal tracks: 5' read ends per strand. One sort serves both.
+# ENCODE's count signal tracks: 5' read ends per strand. figwig counts every read
+# in the filtered BAMs, the reads of the tagAligns before any subsampling. A pool
+# reads every replicate's BAM.
 rule count_signal:
     input:
-        ta=lambda w: ta(w.exp, sample_ta(w.exp, w.base)),
+        bams=lambda w: [
+            f"{OUTDIR}/{w.exp}/filter/{w.exp}.{lib}.bam"
+            for lib in (EXPERIMENTS[w.exp]["libs"] if w.base == "pooled" else [w.base])
+        ],
         chromsizes=CHROMSIZES,
     output:
         positive=f"{OUTDIR}/{{exp}}/signal/{{exp}}.{{base}}.positive.bigWig",
@@ -74,13 +79,11 @@ rule count_signal:
         tmp=$(mktemp -d -p {params.tmp_dir:q})
         trap 'rm -rf "$tmp"' EXIT
 
-        rapidgzip -d -c -P {threads} {input.ta:q} \
-            | sort -k1,1 -k2,2n -S 2G --parallel {threads} -T "$tmp" \
-            > "$tmp/sorted"
-        for strand in positive negative; do
-            sign=$([[ $strand == positive ]] && echo + || echo -)
-            bedtools genomecov -5 -bg -strand "$sign" -g {input.chromsizes:q} -i "$tmp/sorted" > "$tmp/$strand.bdg"
-        done
-        bedGraphToBigWig "$tmp/positive.bdg" {input.chromsizes:q} {output.positive:q}
-        bedGraphToBigWig "$tmp/negative.bdg" {input.chromsizes:q} {output.negative:q}
+        figwig bam2bw \
+            -s {input.chromsizes:q} \
+            -n "$tmp/counts" \
+            -p {threads} \
+            {input.bams:q}
+        mv "$tmp/counts.+.bw" {output.positive:q}
+        mv "$tmp/counts.-.bw" {output.negative:q}
         """

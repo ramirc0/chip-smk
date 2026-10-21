@@ -33,6 +33,7 @@ polars = ">=2.0"
 python-zlib-ng = ">=1.0"
 
 [pypi-dependencies]
+figwig = { version = "==0.1.0", extras = ["bam2bw"] }
 poikilos = { git = "https://github.com/ramirc0/poikilos" }
 
 [activation.env]

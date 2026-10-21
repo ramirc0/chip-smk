@@ -32,4 +32,4 @@ params:
     spp: 300000
     macs3: 500000
   true_rep_only: false          # skip pseudoreplicates and the reproducible peak sets
-  count_signal_track: false     # 5' read count bigWigs per strand
+  count_signal_track: true      # 5' read count bigWigs per strand, for model training
