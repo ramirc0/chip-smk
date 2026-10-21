@@ -303,7 +303,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/xopen-2.1.0-pyh707e725_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/zarr-3.4.1-pyhc364b38_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/zipp-4.1.1-pyh5ded981_0.conda
-      - pypi: git+https://github.com/ramirc0/poikilos#81cd1cb24b293722a9735377de00e9235f09270d
+      - pypi: git+https://github.com/ramirc0/poikilos#05b0fd449213346eaaa39aa9e56873ace657609e
       - pypi: https://files.pythonhosted.org/packages/30/9b/1075a762fc3595d4b8ca688246be9f9ca68a29d0c05c336197670fbc7eff/biopython-1.88-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/35/ba/02b95fafb87b1ff6a4f6a79b06d70bbaf4657f86e95b993ac10104a8f804/pysam-0.24.1-cp313-cp313-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/48/d0/b1e0ed480da3eaff0bec35863b96d312ee8a5c144b3c8c70b7d616fb298a/figwig-0.1.0-py3-none-any.whl
@@ -871,7 +871,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/xopen-2.1.0-pyh707e725_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/zarr-3.4.1-pyhc364b38_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/zipp-4.1.1-pyh5ded981_0.conda
-      - pypi: git+https://github.com/ramirc0/poikilos#81cd1cb24b293722a9735377de00e9235f09270d
+      - pypi: git+https://github.com/ramirc0/poikilos#05b0fd449213346eaaa39aa9e56873ace657609e
       - pypi: https://files.pythonhosted.org/packages/30/9b/1075a762fc3595d4b8ca688246be9f9ca68a29d0c05c336197670fbc7eff/biopython-1.88-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/35/ba/02b95fafb87b1ff6a4f6a79b06d70bbaf4657f86e95b993ac10104a8f804/pysam-0.24.1-cp313-cp313-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/48/d0/b1e0ed480da3eaff0bec35863b96d312ee8a5c144b3c8c70b7d616fb298a/figwig-0.1.0-py3-none-any.whl
@@ -6863,9 +6863,9 @@ packages:
   run_exports: {}
   size: 24839
   timestamp: 1791091060207
-- pypi: git+https://github.com/ramirc0/poikilos#81cd1cb24b293722a9735377de00e9235f09270d
+- pypi: git+https://github.com/ramirc0/poikilos#05b0fd449213346eaaa39aa9e56873ace657609e
   name: poikilos
-  version: 0.1.0
+  version: 1.1.0
   requires_dist:
   - matplotlib>=3.11
   - adjusttext>=1.4.0 ; extra == 'labels'
