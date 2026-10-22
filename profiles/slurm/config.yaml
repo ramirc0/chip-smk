@@ -67,6 +67,8 @@ set-resources:              # from peak RSS and runtime of the ENCODE validation
     mem_mb: 64000 * attempt
     slurm_partition: 12hours
     runtime: 720m
+  macs3:                  # 7.5 GB peak at 351M tags; 398M tags passed 8 GB
+    mem_mb: 16000 * attempt
   signal:
     mem_mb: 16000 * attempt
 
