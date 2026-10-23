@@ -73,7 +73,9 @@ def build_parser():
     argparse.ArgumentParser
         Parser for the qc_summary.py flags.
     """
-    p = argparse.ArgumentParser(description="Gather a run's QC.")
+    p = argparse.ArgumentParser(
+        description="Gather a run's QC.", fromfile_prefix_chars="@"
+    )
     for flag, what in (
         ("--flagstat", "samtools flagstat JSON (align/, filter/, .dup.)"),
         ("--pbc", "pbc_qc.py JSON"),

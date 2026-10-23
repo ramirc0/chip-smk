@@ -50,7 +50,8 @@ rule qc_summary:
         r"""
         exec &> >(tee {log:q})
 
-        python {workflow.basedir:q}/scripts/qc_summary.py \
+        # A large run's paths exceed ARG_MAX. printf is a builtin, so it does not exec.
+        python {workflow.basedir:q}/scripts/qc_summary.py @<(printf '%s\n' \
             --flagstat {input.flagstat:q} \
             --pbc {input.pbc:q} \
             --fastp {input.fastp:q} \
@@ -60,5 +61,5 @@ rule qc_summary:
             --reproducibility {input.reproducibility:q} \
             --peak-qc {input.peak_qc:q} \
             --table {output.table:q} \
-            --plot {output.plot:q}
+            --plot {output.plot:q})
         """

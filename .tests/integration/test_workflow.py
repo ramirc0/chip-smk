@@ -2,6 +2,8 @@
 
 import gzip
 import re
+import subprocess
+import sys
 
 import polars as pl
 import pytest
@@ -191,3 +193,28 @@ def test_true_rep_only_drops_pseudoreplicates(tmp_path):
     for rule in ("pseudoreps", "macs3_pseudorep", "reproducibility"):
         assert f"\n{rule} " not in jobs
     assert "\noverlap " in jobs and "\nidr " in jobs
+
+
+def test_qc_summary_reads_arguments_from_a_file(tmp_path, run):
+    """Check that qc_summary.py takes an @file, so a large run's paths fit ARG_MAX."""
+    frip = sorted(str(p) for p in run.glob("*/frip/*.tsv"))
+    table = tmp_path / "qc.tsv"
+    args = tmp_path / "args"
+    args.write_text(
+        "\n".join(
+            ["--frip", *frip, "--table", str(table), "--plot", str(tmp_path / "qc.svg")]
+        )
+        + "\n"
+    )
+    done = subprocess.run(
+        [sys.executable, ROOT / "workflow/scripts/qc_summary.py", f"@{args}"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert done.returncode == 0, done.stderr[-3000:]
+    expected = pl.read_csv(run / "qc.tsv", separator="\t", infer_schema=False).filter(
+        pl.col("metric") == "frip"
+    )
+    got = pl.read_csv(table, separator="\t", infer_schema=False)
+    assert got.sort(pl.all()).equals(expected.sort(pl.all()))
